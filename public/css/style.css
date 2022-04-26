@@ -1,0 +1,11 @@
+body{
+    text-align: center;
+}
+
+details {
+    margin: 3% 0;
+}
+
+input[type="number"] {
+    width: 5%;
+}

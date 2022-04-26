@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SPI</title>
+
+    <!-- update the version number as needed -->
+    <!-- <script defer src="/__/firebase/9.6.9/firebase-app-compat.js"></script> -->
+    <!-- include only the Firebase features as you need -->
+    <!-- <script defer src="/__/firebase/9.6.9/firebase-auth-compat.js"></script> -->
+    <!-- <script defer src="/__/firebase/9.6.9/firebase-database-compat.js"></script> -->
+    <!-- <script defer src="/__/firebase/9.6.9/firebase-firestore-compat.js"></script> -->
+    <!-- <script defer src="/__/firebase/9.6.9/firebase-functions-compat.js"></script> -->
+    <!--
+      initialize the SDK after all desired features are loaded, set useEmulator to false
+      to avoid connecting the SDK to running emulators.
+    -->
+    <!-- <script defer src="/__/firebase/init.js?useEmulator=true"></script> -->
+    <script src="dist/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div id="main">
+        <div id="select">
+            <h2>SPI</h2>
+            <form>
+                問題数 (最大99問) : <input type="number" name="questionNum" id="questionNum" value="5" min="1" max="99" required><br>
+                制限時間 (秒/1問) : <input type="number" name="timeLimit" id="timeLimit" value="60" min="1" required><br>
+                <label><input type="checkbox" name="inf" id="inf">制限時間無し</label><br><br>
+                <label><input type="radio" name="type" class="type" value="tsurukame" checked>鶴亀算</label>
+                <label><input type="radio" name="type" class="type" value="profitLoss">損益算</label>
+                <label><input type="radio" name="type" class="type" value="inference">推論</label><br><br>
+                <label><input type="radio" name="diff" class="diff" value="easy">初級</label>
+                <label><input type="radio" name="diff" class="diff" value="normal" checked>中級</label>
+                <label><input type="radio" name="diff" class="diff" value="hard">上級</label><br>
+                <input type="submit" value="Start" id="start">
+            </form>
+        </div>
+        <div id="time"></div>
+        <div id="question"></div>
+        <div id="ans"></div>
+        <div id="result"></div>
+    </div>
+    <script src="dist/main.js"></script>
+    <script src="dist/tsurukame.js"></script>
+    <script src="dist/profitLoss.js"></script>
+    <script src="dist/inference.js"></script>
+</body>
+
+</html>
