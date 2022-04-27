@@ -30,12 +30,15 @@
                 問題数 (最大99問) : <input type="number" name="questionNum" id="questionNum" value="5" min="1" max="99" required><br>
                 制限時間 (秒/1問) : <input type="number" name="timeLimit" id="timeLimit" value="60" min="1" required><br>
                 <label><input type="checkbox" name="inf" id="inf">制限時間無し</label><br><br>
+                推論の中級以上は制作中のため問題がありません<br><br>
                 <label><input type="radio" name="type" class="type" value="tsurukame" checked>鶴亀算</label>
                 <label><input type="radio" name="type" class="type" value="profitLoss">損益算</label>
-                <label><input type="radio" name="type" class="type" value="inference">推論</label><br><br>
+                <label><input type="radio" name="type" class="type" value="inference">推論</label>
+                <label><input type="radio" name="type" class="type" value="random">ランダム</label><br><br>
                 <label><input type="radio" name="diff" class="diff" value="easy">初級</label>
                 <label><input type="radio" name="diff" class="diff" value="normal" checked>中級</label>
-                <label><input type="radio" name="diff" class="diff" value="hard">上級</label><br>
+                <label><input type="radio" name="diff" class="diff" value="hard">上級</label>
+                <label><input type="radio" name="diff" class="diff" value="random">ランダム</label><br><br>
                 <input type="submit" value="Start" id="start">
             </form>
         </div>

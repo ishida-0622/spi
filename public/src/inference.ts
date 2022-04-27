@@ -53,11 +53,13 @@ class inference implements q {
     }
 
     normal(rep: number): dict {
+        $("#ans").html(`現在制作中です。<br><button id="next">次へ</button>`);
         const res: dict = { inference: { ans: 0, arr: [], a: 0, b: 0, c: 0, d: 0, html: "html" } };
         return res;
     }
 
     hard(rep: number): dict {
+        $("#ans").html(`現在制作中です。<br><button id="next">次へ</button>`);
         const res: dict = { inference: { ans: 0, arr: [], a: 0, b: 0, c: 0, d: 0, html: "html" } };
         return res;
     }
@@ -82,7 +84,9 @@ const inferenceResult = (userAns: number, dic: dict, diff: diffList): boolean =>
         </p>
         <button id="next">次の問題</button>
         `;
-        $("#result").html(html);
+    } else {
+        html = `<button id="next">次の問題</button>`;
     }
+    $("#result").html(html);
     return userAns === dic.inference!.ans;
 }

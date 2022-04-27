@@ -1,7 +1,7 @@
 // Hello TypeScript
 
 /**
- * returns random int
+ * returns random int. min <= return <= max
  * @param min minimum value
  * @param max max value
  * @returns min to max random int
@@ -11,13 +11,13 @@ const getRandomInt = (min: number, max: number): number => {
 }
 
 /**
- * 小数点以下base位で数値を四捨五入する
+ * round numbers to n decimal places
  * @param value any number
- * @param base digit default -> 0
- * @returns 小数点以下base位で四捨五入された数値
+ * @param n digit default -> 0
+ * @returns number rounded to n decimal places
  */
-const orgRound = (value: number, base: number = 0): number => {
-    return Math.round(value * (10 ** base)) / (10 ** base);
+const orgRound = (value: number, n: number = 0): number => {
+    return Math.round(value * (10 ** n)) / (10 ** n);
 }
 
 /**
@@ -98,8 +98,11 @@ const optHtmlCreate = (arr: number[]): string => {
     let res = `<label><input type="radio" name="ans" class="ans" value="${arr[0]}" checked>${arr[0]}</label>`;
     for (let i = 1; i < arr.length; i++) {
         res += `<label><input type="radio" name="ans" class="ans" value="${arr[i]}">${arr[i]}</label>`
+        if (i === Math.round(arr.length / 2) - 1) {
+            res += "<br>"
+        }
     }
-    res += `<button id="next">解答・解説へ</button>`;
+    res += `<br><button id="next">解答・解説へ</button>`;
     return res;
 }
 
@@ -136,12 +139,19 @@ const pause = () => new Promise<void>((resolve) => {
 
 const result = (userAns: number, dic: dict, diff: diffList, type: questions) => new Promise<boolean>((resolve) => {
     let res: boolean;
-    if (type === questions.tsurukame) {
-        res = turukameResult(userAns, dic, diff);
-    } else if (type === questions.inference) {
-        res = inferenceResult(userAns, dic, diff);
-    } else if (type === questions.profitLoss) {
-        res = profitLossResult(userAns, dic, diff);
+    switch (type) {
+        case questions.tsurukame:
+            res = turukameResult(userAns, dic, diff);
+            break;
+        case questions.inference:
+            res = inferenceResult(userAns, dic, diff);
+            break;
+        case questions.profitLoss:
+            res = profitLossResult(userAns, dic, diff);
+            break;
+        default:
+            res = false;
+            break;
     }
 
     $("#next").on("click", () => {
@@ -170,29 +180,39 @@ $("#start").on("click", () => {
         case "inference":
             questionType = questions.inference;
             break;
+        case "random":
+            questionType = questions.random;
+            break;
         default:
             console.log("err1");
             return;
     }
     switch (diff) {
-        case diffList.e:
+        case "easy":
             diffType = diffList.e;
             break;
-        case diffList.n:
+        case "normal":
             diffType = diffList.n;
             break;
-        case diffList.h:
+        case "hard":
             diffType = diffList.h;
+            break;
+        case "random":
+            diffType = diffList.random;
             break;
         default:
             console.log("err2");
             return;
     }
-    start(questionType, qNum, diffType);
+    if (questionType === questions.random || diffType === diffList.random) {
+        randomStart(questionType, diffType, qNum);
+    } else {
+        start(questionType, diffType, qNum);
+    }
     $("#select").html("");
 });
 
-const start = async (type: questions, n: number, diff: diffList) => {
+const start = async (type: questions, diff: diffList, n: number) => {
     let question: tsurukame | inference | profitLoss;
     switch (type) {
         case questions.tsurukame:
@@ -232,10 +252,10 @@ const start = async (type: questions, n: number, diff: diffList) => {
     let cnt = 0;
     ansList.forEach((element, i) => {
         if (element) {
-            html += `<p>${i + 1}問目 : 正解</p>`;
+            html += `<p>${i + 1}問目 : o</p>`;
             cnt++;
         } else {
-            html += `<p>${i + 1}問目 : 不正解</p>`;
+            html += `<p>${i + 1}問目 : x</p>`;
         }
     });
     html = `<h3>${n}問中${cnt}問正解</h4>` + html;
@@ -243,22 +263,122 @@ const start = async (type: questions, n: number, diff: diffList) => {
     $("#result").html(html);
 }
 
+const randomStart = async (type: questions, diff: diffList, n: number) => {
+    let question: tsurukame | inference | profitLoss;
+    const typeRandom = type === questions.random;
+    const diffRandom = diff === diffList.random;
+    switch (type) {
+        case questions.tsurukame:
+            question = new tsurukame;
+            break;
+        case questions.profitLoss:
+            question = new profitLoss;
+            break;
+        case questions.inference:
+            question = new inference;
+            break;
+        default:
+            [question, type] = randomQuestion();
+            break;
+    }
+    const ansList: boolean[] = [];
+    const timeLimit: number = Number($("#timeLimit").val());
+    const notTime: boolean = $("#inf").prop("checked");
+    for (let i = 1; i <= n; i++) {
+        if (typeRandom) {
+            [question, type] = randomQuestion();
+        }
+        if (diffRandom) {
+            diff = randomDiff();
+        }
+        const dic: dict = diff === diffList.e ? question.easy(i) : diff === diffList.n ? question.normal(i) : question.hard(i);
+        if (notTime) {
+            await pause();
+        } else {
+            $("#time").html(`<p>残り${timeLimit}秒</p>`);
+            await timeCount(timeLimit);
+        }
+        const userAns: number = Number($("input[name='ans']:checked").val());
+        $("#question").html("");
+        $("#ans").html("");
+        $("#time").html("");
+        const r = await result(userAns, dic, diff, type);
+        ansList.push(r);
+    }
+
+    let html = "";
+    let cnt = 0;
+    ansList.forEach((element, i) => {
+        if (element) {
+            html += `<p>${i + 1}問目 : o</p>`;
+            cnt++;
+        } else {
+            html += `<p>${i + 1}問目 : x</p>`;
+        }
+    });
+    html = `<h3>${n}問中${cnt}問正解</h4>` + html;
+    html += `<button onclick="location.href='index.html'">戻る</button>`;
+    $("#result").html(html);
+}
+
+const randomQuestion = () => {
+    let res: [tsurukame | inference | profitLoss, questions];
+    const n = getRandomInt(0,questions.random-1);
+    switch (n) {
+        case 0:
+            res = [new tsurukame, questions.tsurukame];
+            break;
+        case 1:
+            res = [new inference, questions.inference];
+            break;
+        case 2:
+            res = [new profitLoss, questions.profitLoss];
+            break;
+        default:
+            res = [new tsurukame, questions.tsurukame];
+            break;
+    }
+    return res;
+}
+
+const randomDiff = () => {
+    let res: diffList;
+    const n = getRandomInt(0, diffList.random-1);
+    switch (n) {
+        case 0:
+            res = diffList.e;
+            break;
+        case 1:
+            res = diffList.n;
+            break;
+        case 2:
+            res = diffList.h;
+            break;
+        default:
+            res = diffList.e;
+            break;
+    }
+    return res;
+}
+
 /**
  * difficulty list
  */
 enum diffList {
-    e = "easy",
-    n = "normal",
-    h = "hard",
+    e,
+    n,
+    h,
+    random,
 }
 
 /**
  * question type
  */
 enum questions {
-    tsurukame = "tsurukame",
-    inference = "inference",
-    profitLoss = "profitLoss",
+    tsurukame,
+    inference,
+    profitLoss,
+    random,
 }
 
 // 参考 https://qiita.com/uhyo/items/583ddf7af3b489d5e8e9
@@ -269,6 +389,7 @@ type PartialRequire<O, K extends keyof O> = {
 } & O;
 
 type dict = RequireOne<{
+    /**鶴亀算*/
     tsurukame?: {
         ans: number;
         apple: number;
@@ -317,4 +438,3 @@ interface q {
     normal(rep: number): dict;
     hard(rep: number): dict;
 }
-

@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 /**
- * returns random int
+ * returns random int. min <= return <= max
  * @param min minimum value
  * @param max max value
  * @returns min to max random int
@@ -19,13 +19,13 @@ const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1) + min);
 };
 /**
- * 小数点以下base位で数値を四捨五入する
+ * round numbers to n decimal places
  * @param value any number
- * @param base digit default -> 0
- * @returns 小数点以下base位で四捨五入された数値
+ * @param n digit default -> 0
+ * @returns number rounded to n decimal places
  */
-const orgRound = (value, base = 0) => {
-    return Math.round(value * (10 ** base)) / (10 ** base);
+const orgRound = (value, n = 0) => {
+    return Math.round(value * (10 ** n)) / (10 ** n);
 };
 /**
  * array shuffle
@@ -102,8 +102,11 @@ const optHtmlCreate = (arr) => {
     let res = `<label><input type="radio" name="ans" class="ans" value="${arr[0]}" checked>${arr[0]}</label>`;
     for (let i = 1; i < arr.length; i++) {
         res += `<label><input type="radio" name="ans" class="ans" value="${arr[i]}">${arr[i]}</label>`;
+        if (i === Math.round(arr.length / 2) - 1) {
+            res += "<br>";
+        }
     }
-    res += `<button id="next">解答・解説へ</button>`;
+    res += `<br><button id="next">解答・解説へ</button>`;
     return res;
 };
 // const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -135,14 +138,19 @@ const pause = () => new Promise((resolve) => {
 });
 const result = (userAns, dic, diff, type) => new Promise((resolve) => {
     let res;
-    if (type === questions.tsurukame) {
-        res = turukameResult(userAns, dic, diff);
-    }
-    else if (type === questions.inference) {
-        res = inferenceResult(userAns, dic, diff);
-    }
-    else if (type === questions.profitLoss) {
-        res = profitLossResult(userAns, dic, diff);
+    switch (type) {
+        case questions.tsurukame:
+            res = turukameResult(userAns, dic, diff);
+            break;
+        case questions.inference:
+            res = inferenceResult(userAns, dic, diff);
+            break;
+        case questions.profitLoss:
+            res = profitLossResult(userAns, dic, diff);
+            break;
+        default:
+            res = false;
+            break;
     }
     $("#next").on("click", () => {
         $("#result").html("");
@@ -169,28 +177,39 @@ $("#start").on("click", () => {
         case "inference":
             questionType = questions.inference;
             break;
+        case "random":
+            questionType = questions.random;
+            break;
         default:
             console.log("err1");
             return;
     }
     switch (diff) {
-        case diffList.e:
+        case "easy":
             diffType = diffList.e;
             break;
-        case diffList.n:
+        case "normal":
             diffType = diffList.n;
             break;
-        case diffList.h:
+        case "hard":
             diffType = diffList.h;
+            break;
+        case "random":
+            diffType = diffList.random;
             break;
         default:
             console.log("err2");
             return;
     }
-    start(questionType, qNum, diffType);
+    if (questionType === questions.random || diffType === diffList.random) {
+        randomStart(questionType, diffType, qNum);
+    }
+    else {
+        start(questionType, diffType, qNum);
+    }
     $("#select").html("");
 });
-const start = (type, n, diff) => __awaiter(void 0, void 0, void 0, function* () {
+const start = (type, diff, n) => __awaiter(void 0, void 0, void 0, function* () {
     let question;
     switch (type) {
         case questions.tsurukame:
@@ -229,32 +248,130 @@ const start = (type, n, diff) => __awaiter(void 0, void 0, void 0, function* () 
     let cnt = 0;
     ansList.forEach((element, i) => {
         if (element) {
-            html += `<p>${i + 1}問目 : 正解</p>`;
+            html += `<p>${i + 1}問目 : o</p>`;
             cnt++;
         }
         else {
-            html += `<p>${i + 1}問目 : 不正解</p>`;
+            html += `<p>${i + 1}問目 : x</p>`;
         }
     });
     html = `<h3>${n}問中${cnt}問正解</h4>` + html;
     html += `<button onclick="location.href='index.html'">戻る</button>`;
     $("#result").html(html);
 });
+const randomStart = (type, diff, n) => __awaiter(void 0, void 0, void 0, function* () {
+    let question;
+    const typeRandom = type === questions.random;
+    const diffRandom = diff === diffList.random;
+    switch (type) {
+        case questions.tsurukame:
+            question = new tsurukame;
+            break;
+        case questions.profitLoss:
+            question = new profitLoss;
+            break;
+        case questions.inference:
+            question = new inference;
+            break;
+        default:
+            [question, type] = randomQuestion();
+            break;
+    }
+    const ansList = [];
+    const timeLimit = Number($("#timeLimit").val());
+    const notTime = $("#inf").prop("checked");
+    for (let i = 1; i <= n; i++) {
+        if (typeRandom) {
+            [question, type] = randomQuestion();
+        }
+        if (diffRandom) {
+            diff = randomDiff();
+        }
+        const dic = diff === diffList.e ? question.easy(i) : diff === diffList.n ? question.normal(i) : question.hard(i);
+        if (notTime) {
+            yield pause();
+        }
+        else {
+            $("#time").html(`<p>残り${timeLimit}秒</p>`);
+            yield timeCount(timeLimit);
+        }
+        const userAns = Number($("input[name='ans']:checked").val());
+        $("#question").html("");
+        $("#ans").html("");
+        $("#time").html("");
+        const r = yield result(userAns, dic, diff, type);
+        ansList.push(r);
+    }
+    let html = "";
+    let cnt = 0;
+    ansList.forEach((element, i) => {
+        if (element) {
+            html += `<p>${i + 1}問目 : o</p>`;
+            cnt++;
+        }
+        else {
+            html += `<p>${i + 1}問目 : x</p>`;
+        }
+    });
+    html = `<h3>${n}問中${cnt}問正解</h4>` + html;
+    html += `<button onclick="location.href='index.html'">戻る</button>`;
+    $("#result").html(html);
+});
+const randomQuestion = () => {
+    let res;
+    const n = getRandomInt(0, questions.random - 1);
+    switch (n) {
+        case 0:
+            res = [new tsurukame, questions.tsurukame];
+            break;
+        case 1:
+            res = [new inference, questions.inference];
+            break;
+        case 2:
+            res = [new profitLoss, questions.profitLoss];
+            break;
+        default:
+            res = [new tsurukame, questions.tsurukame];
+            break;
+    }
+    return res;
+};
+const randomDiff = () => {
+    let res;
+    const n = getRandomInt(0, diffList.random - 1);
+    switch (n) {
+        case 0:
+            res = diffList.e;
+            break;
+        case 1:
+            res = diffList.n;
+            break;
+        case 2:
+            res = diffList.h;
+            break;
+        default:
+            res = diffList.e;
+            break;
+    }
+    return res;
+};
 /**
  * difficulty list
  */
 var diffList;
 (function (diffList) {
-    diffList["e"] = "easy";
-    diffList["n"] = "normal";
-    diffList["h"] = "hard";
+    diffList[diffList["e"] = 0] = "e";
+    diffList[diffList["n"] = 1] = "n";
+    diffList[diffList["h"] = 2] = "h";
+    diffList[diffList["random"] = 3] = "random";
 })(diffList || (diffList = {}));
 /**
  * question type
  */
 var questions;
 (function (questions) {
-    questions["tsurukame"] = "tsurukame";
-    questions["inference"] = "inference";
-    questions["profitLoss"] = "profitLoss";
+    questions[questions["tsurukame"] = 0] = "tsurukame";
+    questions[questions["inference"] = 1] = "inference";
+    questions[questions["profitLoss"] = 2] = "profitLoss";
+    questions[questions["random"] = 3] = "random";
 })(questions || (questions = {}));

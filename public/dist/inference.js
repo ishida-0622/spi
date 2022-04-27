@@ -50,10 +50,12 @@ class inference {
         return res;
     }
     normal(rep) {
+        $("#ans").html(`現在制作中です。<br><button id="next">次へ</button>`);
         const res = { inference: { ans: 0, arr: [], a: 0, b: 0, c: 0, d: 0, html: "html" } };
         return res;
     }
     hard(rep) {
+        $("#ans").html(`現在制作中です。<br><button id="next">次へ</button>`);
         const res = { inference: { ans: 0, arr: [], a: 0, b: 0, c: 0, d: 0, html: "html" } };
         return res;
     }
@@ -77,7 +79,10 @@ const inferenceResult = (userAns, dic, diff) => {
         </p>
         <button id="next">次の問題</button>
         `;
-        $("#result").html(html);
     }
+    else {
+        html = `<button id="next">次の問題</button>`;
+    }
+    $("#result").html(html);
     return userAns === dic.inference.ans;
 };
