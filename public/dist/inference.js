@@ -52,12 +52,12 @@ class inference {
     normal(rep) {
         $("#ans").html(`現在制作中です。<br><button id="next">次へ</button>`);
         const res = { inference: { ans: 0, arr: [], a: 0, b: 0, c: 0, d: 0, html: "html" } };
-        return res;
+        throw new Error("Method not implemented.");
     }
     hard(rep) {
         $("#ans").html(`現在制作中です。<br><button id="next">次へ</button>`);
         const res = { inference: { ans: 0, arr: [], a: 0, b: 0, c: 0, d: 0, html: "html" } };
-        return res;
+        throw new Error("Method not implemented.");
     }
 }
 const inferenceResult = (userAns, dic, diff) => {

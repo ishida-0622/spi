@@ -13,10 +13,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
  * returns random int. min <= return <= max
  * @param min minimum value
  * @param max max value
+ * @param exclude_num numbers to exclude
  * @returns min to max random int
  */
-const getRandomInt = (min, max) => {
-    return Math.floor(Math.random() * (max - min + 1) + min);
+const getRandomInt = (min, max, ...exclude_num) => {
+    let res = Math.floor(Math.random() * (max - min + 1) + min);
+    while (exclude_num.some(val => val === res)) {
+        res = Math.floor(Math.random() * (max - min + 1) + min);
+    }
+    return res;
 };
 /**
  * round numbers to n decimal places
@@ -65,34 +70,19 @@ const array_equal = (a, b) => {
  * @returns returns is not equal answer and not in arr
  */
 const fake = (ans, min, max, arr = [], evenOdd = false) => {
-    let res;
+    let res = getRandomInt(min, max);
     if ((max - min < arr.length) || (evenOdd && Math.ceil((max - min) / 2) <= arr.length)) { // 最小値から最大値まで全てを使い切っている場合の無限ループ回避
         return 0;
     }
-    while (true) {
+    while (res === ans || arr.some(val => val === res) || (evenOdd && res % 2 !== ans % 2)) {
         res = getRandomInt(min, max);
-        if (evenOdd && res % 2 !== ans % 2) {
-            continue;
-        }
-        let endFlag = true;
-        arr.forEach(element => {
-            if (element === res) {
-                endFlag = false;
-            }
-        });
-        if (res === ans) {
-            endFlag = false;
-        }
-        if (endFlag) {
-            break;
-        }
     }
     return res;
 };
 /**
- * ;
+ * radio button html create
  * @param arr length 1 or more array
- * @returns radio
+ * @returns radio button html
  */
 const optHtmlCreate = (arr) => {
     if (arr.length < 1) {
@@ -222,8 +212,7 @@ const start = (type, diff, n) => __awaiter(void 0, void 0, void 0, function* () 
             question = new inference;
             break;
         default:
-            console.log("err3");
-            return;
+            throw new Error("err3");
     }
     const ansList = [];
     const timeLimit = Number($("#timeLimit").val());

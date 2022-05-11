@@ -4,10 +4,15 @@
  * returns random int. min <= return <= max
  * @param min minimum value
  * @param max max value
+ * @param exclude_num numbers to exclude
  * @returns min to max random int
  */
-const getRandomInt = (min: number, max: number): number => {
-    return Math.floor(Math.random() * (max - min + 1) + min);
+const getRandomInt = (min: number, max: number, ...exclude_num: number[]): number => {
+    let res = Math.floor(Math.random() * (max - min + 1) + min);
+    while (exclude_num.some(val => val === res)) {
+        res = Math.floor(Math.random() * (max - min + 1) + min);
+    }
+    return res;
 }
 
 /**
@@ -25,7 +30,7 @@ const orgRound = (value: number, n: number = 0): number => {
  * @param arr any array
  * @returns shuffled array
  */
-const shuffle = (arr: any[]): any[] => {
+const shuffle = <T>(arr: T[]): T[] => {
     for (let i = arr.length - 1; i >= 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [arr[i], arr[j]] = [arr[j], arr[i]];
@@ -39,7 +44,7 @@ const shuffle = (arr: any[]): any[] => {
  * @param b any array
  * @returns a === b ? true : false
  */
-const array_equal = (a: any[], b: any[]): boolean => {
+const array_equal = <T>(a: T[], b: T[]): boolean => {
     if (a.length !== b.length) {
         return false;
     }
@@ -60,40 +65,24 @@ const array_equal = (a: any[], b: any[]): boolean => {
  * @returns returns is not equal answer and not in arr
  */
 const fake = (ans: number, min: number, max: number, arr: number[] = [], evenOdd: boolean = false): number => {
-    let res: number;
+    let res = getRandomInt(min, max);
     if ((max - min < arr.length) || (evenOdd && Math.ceil((max - min) / 2) <= arr.length)) { // 最小値から最大値まで全てを使い切っている場合の無限ループ回避
         return 0;
     }
-    while (true) {
+    while (res === ans || arr.some(val => val === res) || (evenOdd && res % 2 !== ans % 2)) {
         res = getRandomInt(min, max);
-        if (evenOdd && res % 2 !== ans % 2) {
-            continue;
-        }
-        let endFlag = true;
-        arr.forEach(element => {
-            if (element === res) {
-                endFlag = false;
-            }
-        });
-        if (res === ans) {
-            endFlag = false;
-        }
-        if (endFlag) {
-            break;
-        }
     }
     return res;
 }
 
 /**
- * ;
+ * radio button html create
  * @param arr length 1 or more array
- * @returns radio
+ * @returns radio button html
  */
 const optHtmlCreate = (arr: number[]): string => {
     if (arr.length < 1) {
-        console.log("error");
-        return "";
+        throw new Error("main.ts line 86. array length = 0");
     }
     let res = `<label><input type="radio" name="ans" class="ans" value="${arr[0]}" checked>${arr[0]}</label>`;
     for (let i = 1; i < arr.length; i++) {
@@ -213,7 +202,7 @@ $("#start").on("click", () => {
 });
 
 const start = async (type: questions, diff: diffList, n: number) => {
-    let question: tsurukame | inference | profitLoss;
+    let question: questionTypes;
     switch (type) {
         case questions.tsurukame:
             question = new tsurukame;
@@ -225,8 +214,7 @@ const start = async (type: questions, diff: diffList, n: number) => {
             question = new inference;
             break;
         default:
-            console.log("err3");
-            return;
+            throw new Error("err3");
     }
 
     const ansList: boolean[] = [];
@@ -264,7 +252,7 @@ const start = async (type: questions, diff: diffList, n: number) => {
 }
 
 const randomStart = async (type: questions, diff: diffList, n: number) => {
-    let question: tsurukame | inference | profitLoss;
+    let question: questionTypes;
     const typeRandom = type === questions.random;
     const diffRandom = diff === diffList.random;
     switch (type) {
@@ -322,7 +310,7 @@ const randomStart = async (type: questions, diff: diffList, n: number) => {
 }
 
 const randomQuestion = () => {
-    let res: [tsurukame | inference | profitLoss, questions];
+    let res: [questionTypes, questions];
     const n = getRandomInt(0,questions.random-1);
     switch (n) {
         case 0:
@@ -380,6 +368,8 @@ enum questions {
     profitLoss,
     random,
 }
+
+type questionTypes = tsurukame | inference | profitLoss;
 
 // 参考 https://qiita.com/uhyo/items/583ddf7af3b489d5e8e9
 type RequireOne<T, K extends keyof T = keyof T> =

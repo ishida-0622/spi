@@ -4,10 +4,7 @@ class tsurukame implements q {
         const apple = getRandomInt(1, sum - 1); // りんごの数
         const appleValues = getRandomInt(5, 30) * 10; // りんごの値段 50~300
         const orange = sum - apple; // オレンジの数
-        let orangeValues = getRandomInt(5, 30) * 10; // オレンジの値段 50~300
-        while (appleValues === orangeValues) { // 値段が同じだと問題が成立しないので違くなるまでループ
-            orangeValues = getRandomInt(5, 50) * 10;
-        }
+        const orangeValues = getRandomInt(5, 30, appleValues / 10) * 10; // オレンジの値段 50~300
         const sumValues = appleValues * apple + orangeValues * orange;
         const Q = `<h3>Q.${rep}</h3>`;
         const html: string = `
@@ -35,15 +32,9 @@ class tsurukame implements q {
         const apple = getRandomInt(5, sum - 10); // りんごの数
         const appleValues = getRandomInt(5, 30) * 10; // りんごの値段 50~300
         const banana = getRandomInt(1, sum - apple - 3); // バナナの数
-        let bananaValues = getRandomInt(5, 30) * 10; // バナナの値段 50~300
-        while (appleValues === bananaValues) { // 値段が同じだと問題が成立しないので違くなるまでループ
-            bananaValues = getRandomInt(5, 50) * 10;
-        }
+        const bananaValues = getRandomInt(5, 30, appleValues / 10) * 10; // バナナの値段 50~300
         const orange = sum - apple - banana; // オレンジの数
-        let orangeValues = getRandomInt(5, 30) * 10; // オレンジの値段 50~300
-        while (appleValues === orangeValues || bananaValues === orangeValues) { // 値段が同じだと問題が成立しないので違くなるまでループ
-            orangeValues = getRandomInt(5, 50) * 10;
-        }
+        const orangeValues = getRandomInt(5, 30, appleValues / 10, bananaValues / 10) * 10; // オレンジの値段 50~300
         const sumValues = appleValues * apple + orangeValues * orange + banana * bananaValues;
         const Q = `<h3>Q.${rep}</h3>`;
         const html: string = `
@@ -72,15 +63,9 @@ class tsurukame implements q {
         const orange = getRandomInt(5, Math.floor((sum - 15) / 2)); // オレンジの数
         const orangeValues = getRandomInt(5, 30) * 10; // オレンジの値段 50~300
         const banana = orange; // バナナの数 オレンジと同じ
-        let bananaValues = getRandomInt(5, 30) * 10; // バナナの値段 50~300
-        while (bananaValues === orangeValues) { // 値段が同じだと問題が成立しないので違くなるまでループ
-            bananaValues = getRandomInt(5, 30) * 10;
-        }
+        const bananaValues = getRandomInt(5, 30, orangeValues / 10) * 10; // バナナの値段 50~300
         const apple = sum - orange - banana; // りんごの数
-        let appleValues = getRandomInt(5, 30) * 10; // りんごの値段 50~300
-        while (appleValues === bananaValues || appleValues === orangeValues) { // 値段が同じだと問題が成立しないので違くなるまでループ
-            bananaValues = getRandomInt(5, 30) * 10;
-        }
+        const appleValues = getRandomInt(5, 30, bananaValues / 10, orangeValues / 10) * 10; // りんごの値段 50~300
         const sumValues = appleValues * apple + orangeValues * orange + banana * bananaValues;
         const html: string = `<h3>Q.${rep}</h3><p>1個${appleValues}円の${appleValues >= 200 ? "高級" : ""}りんごと、1個${orangeValues}円の${orangeValues >= 200 ? "高級" : ""}オレンジと、1個${bananaValues}円の${bananaValues >= 200 ? "高級" : ""}バナナを<br>合計${sum}個購入して合計金額が${sumValues}円だった。<br>オレンジとバナナを同じ個数買った場合、りんごはいくつ購入したか。</p>`;
         $("#question").html(html);

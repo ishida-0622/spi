@@ -55,13 +55,13 @@ class inference implements q {
     normal(rep: number): dict {
         $("#ans").html(`現在制作中です。<br><button id="next">次へ</button>`);
         const res: dict = { inference: { ans: 0, arr: [], a: 0, b: 0, c: 0, d: 0, html: "html" } };
-        return res;
+        throw new Error("Method not implemented.");
     }
 
     hard(rep: number): dict {
         $("#ans").html(`現在制作中です。<br><button id="next">次へ</button>`);
         const res: dict = { inference: { ans: 0, arr: [], a: 0, b: 0, c: 0, d: 0, html: "html" } };
-        return res;
+        throw new Error("Method not implemented.");
     }
 }
 
