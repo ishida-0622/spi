@@ -15,7 +15,7 @@ class tsurukame implements q {
         </p>`;
         $("#question").html(Q + html);
 
-        const opt: number[] = apple !== orange ? [apple, orange] : [apple];
+        const opt: AtLeast<1, number> = apple !== orange ? [apple, orange] : [apple];
         while (opt.length < 6) {
             opt.push(fake(apple, Math.ceil(apple / 10), sum, opt));
         }
@@ -46,7 +46,7 @@ class tsurukame implements q {
         `;
         $("#question").html(Q + html);
 
-        const opt: number[] = [apple];
+        const opt: AtLeast<1, number> = [apple];
         while (opt.length < 6) {
             opt.push(fake(apple, Math.ceil(apple / 10), sum, opt));
         }
@@ -70,7 +70,7 @@ class tsurukame implements q {
         const html: string = `<h3>Q.${rep}</h3><p>1個${appleValues}円の${appleValues >= 200 ? "高級" : ""}りんごと、1個${orangeValues}円の${orangeValues >= 200 ? "高級" : ""}オレンジと、1個${bananaValues}円の${bananaValues >= 200 ? "高級" : ""}バナナを<br>合計${sum}個購入して合計金額が${sumValues}円だった。<br>オレンジとバナナを同じ個数買った場合、りんごはいくつ購入したか。</p>`;
         $("#question").html(html);
 
-        const opt: number[] = [apple];
+        const opt: AtLeast<1, number> = [apple];
         while (opt.length < 6) {
             opt.push(fake(apple, Math.ceil(apple / 10), sum, opt, true));
         }
