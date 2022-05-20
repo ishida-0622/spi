@@ -26,11 +26,11 @@ const getRandomInt = (min, max, ...exclude_num) => {
 /**
  * round numbers to n decimal places
  * @param value any number
- * @param n digit default -> 0
+ * @param digit digit default -> 0
  * @returns number rounded to n decimal places
  */
-const orgRound = (value, n = 0) => {
-    return Math.round(value * (10 ** n)) / (10 ** n);
+const orgRound = (value, digit = 0) => {
+    return Math.round(value * (10 ** digit)) / (10 ** digit);
 };
 /**
  * array shuffle
@@ -86,8 +86,7 @@ const fake = (ans, min, max, arr = [], evenOdd = false) => {
  */
 const optHtmlCreate = (arr) => {
     if (arr.length < 1) {
-        console.log("error");
-        return "";
+        throw new Error("main.ts line 86. array length = 0");
     }
     let res = `<label><input type="radio" name="ans" class="ans" value="${arr[0]}" checked>${arr[0]}</label>`;
     for (let i = 1; i < arr.length; i++) {
@@ -99,7 +98,6 @@ const optHtmlCreate = (arr) => {
     res += `<br><button id="next">解答・解説へ</button>`;
     return res;
 };
-// const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 /**
  * time counts until over time limit or id="next" element is clicked
  * @param s time limit. by seconds
@@ -171,8 +169,7 @@ $("#start").on("click", () => {
             questionType = questions.random;
             break;
         default:
-            console.log("err1");
-            return;
+            throw new Error("main.ts 176. questionTypeが不正");
     }
     switch (diff) {
         case "easy":
@@ -188,8 +185,7 @@ $("#start").on("click", () => {
             diffType = diffList.random;
             break;
         default:
-            console.log("err2");
-            return;
+            throw new Error("main.ts 192. diffが不正");
     }
     if (questionType === questions.random || diffType === diffList.random) {
         randomStart(questionType, diffType, qNum);

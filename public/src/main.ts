@@ -18,11 +18,11 @@ const getRandomInt = (min: number, max: number, ...exclude_num: number[]): numbe
 /**
  * round numbers to n decimal places
  * @param value any number
- * @param n digit default -> 0
+ * @param digit digit default -> 0
  * @returns number rounded to n decimal places
  */
-const orgRound = (value: number, n: number = 0): number => {
-    return Math.round(value * (10 ** n)) / (10 ** n);
+const orgRound = (value: number, digit: number = 0): number => {
+    return Math.round(value * (10 ** digit)) / (10 ** digit);
 }
 
 /**
@@ -80,7 +80,7 @@ const fake = (ans: number, min: number, max: number, arr: number[] = [], evenOdd
  * @param arr length 1 or more array
  * @returns radio button html
  */
-const optHtmlCreate = (arr: number[]): string => {
+const optHtmlCreate = <T>(arr: AtLeast<1, T>): string => {
     if (arr.length < 1) {
         throw new Error("main.ts line 86. array length = 0");
     }
@@ -94,8 +94,6 @@ const optHtmlCreate = (arr: number[]): string => {
     res += `<br><button id="next">解答・解説へ</button>`;
     return res;
 }
-
-// const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * time counts until over time limit or id="next" element is clicked
@@ -150,7 +148,7 @@ const result = (userAns: number, dic: dict, diff: diffList, type: questions) => 
 });
 
 $("#start").on("click", () => {
-    const qNum: number = Number($("#questionNum").val());
+    const qNum = Number($("#questionNum").val());
     if (qNum < 1 || qNum > 99) {
         alert("1~99の数値を入れてください");
         return;
@@ -173,8 +171,7 @@ $("#start").on("click", () => {
             questionType = questions.random;
             break;
         default:
-            console.log("err1");
-            return;
+            throw new Error("main.ts 176. questionTypeが不正");
     }
     switch (diff) {
         case "easy":
@@ -190,8 +187,7 @@ $("#start").on("click", () => {
             diffType = diffList.random;
             break;
         default:
-            console.log("err2");
-            return;
+            throw new Error("main.ts 192. diffが不正");
     }
     if (questionType === questions.random || diffType === diffList.random) {
         randomStart(questionType, diffType, qNum);
@@ -370,6 +366,21 @@ enum questions {
 }
 
 type questionTypes = tsurukame | inference | profitLoss;
+
+// 参考 https://qiita.com/uhyo/items/80ce7c00f413c1d1be56
+type Append<Elm, T extends unknown[]> = ((
+    arg: Elm,
+    ...rest: T
+) => void) extends ((...args: infer T2) => void)
+    ? T2
+    : never;
+
+type AtLeast<N extends number, T> = AtLeastRec<N, T, T[], []>;
+
+type AtLeastRec<Num, Elm, T extends unknown[], C extends unknown[]> = {
+    0: T;
+    1: AtLeastRec<Num, Elm, Append<Elm, T>, Append<unknown, C>>;
+}[C extends { length: Num } ? 0 : 1];
 
 // 参考 https://qiita.com/uhyo/items/583ddf7af3b489d5e8e9
 type RequireOne<T, K extends keyof T = keyof T> =
