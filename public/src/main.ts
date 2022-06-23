@@ -1,6 +1,15 @@
 // Hello TypeScript
 
 /**
+ * value is number?
+ * @param val any value
+ * @returns true if val is number and val is not NaN. false else.
+ */
+const isNumber = (val: unknown): boolean => {
+    return typeof val === "number" && isFinite(val)
+}
+
+/**
  * returns random int. min <= return <= max
  * @param min minimum value
  * @param max max value
@@ -57,6 +66,7 @@ const array_equal = <T>(a: T[], b: T[]): boolean => {
 }
 
 /**
+ * incorrect answer create
  * @param ans answer
  * @param min minimum value
  * @param max max value
@@ -64,7 +74,7 @@ const array_equal = <T>(a: T[], b: T[]): boolean => {
  * @param evenOdd true -> match even odd numbers with answer. default -> false
  * @returns returns is not equal answer and not in arr
  */
-const fake = (ans: number, min: number, max: number, arr: number[] = [], evenOdd: boolean = false): number => {
+const incorrectAnswerCreate = (ans: number, min: number, max: number, arr: number[] = [], evenOdd: boolean = false): number => {
     let res = getRandomInt(min, max);
     if ((max - min < arr.length) || (evenOdd && Math.ceil((max - min) / 2) <= arr.length)) { // 最小値から最大値まで全てを使い切っている場合の無限ループ回避
         return 0;
@@ -148,6 +158,10 @@ const result = (userAns: number, dic: dict, diff: diffList, type: questions) => 
 });
 
 $("#start").on("click", () => {
+    if (!isNumber($("#questionNum").val())) {
+        alert("入力値が不正です 162");
+        return;
+    }
     const qNum = Number($("#questionNum").val());
     if (qNum < 1 || qNum > 99) {
         alert("1~99の数値を入れてください");
@@ -171,7 +185,7 @@ $("#start").on("click", () => {
             questionType = questions.random;
             break;
         default:
-            throw new Error("main.ts 176. questionTypeが不正");
+            throw new Error("main.ts 178. questionTypeが不正");
     }
     switch (diff) {
         case "easy":
@@ -187,7 +201,7 @@ $("#start").on("click", () => {
             diffType = diffList.random;
             break;
         default:
-            throw new Error("main.ts 192. diffが不正");
+            throw new Error("main.ts 194. diffが不正");
     }
     if (questionType === questions.random || diffType === diffList.random) {
         randomStart(questionType, diffType, qNum);
@@ -214,6 +228,10 @@ const start = async (type: questions, diff: diffList, n: number) => {
     }
 
     const ansList: boolean[] = [];
+    if (!isNumber(Number($("#timeLimit").val()))) {
+        alert("入力値が不正です 232");
+        return;
+    }
     const timeLimit: number = Number($("#timeLimit").val());
     const notTime: boolean = $("#inf").prop("checked");
     for (let i = 1; i <= n; i++) {
@@ -225,6 +243,10 @@ const start = async (type: questions, diff: diffList, n: number) => {
             await timeCount(timeLimit);
         }
         const userAns: number = Number($("input[name='ans']:checked").val());
+        if (userAns === NaN) {
+            alert("入力値が不正です");
+            return;
+        }
         $("#question").html("");
         $("#ans").html("");
         $("#time").html("");
