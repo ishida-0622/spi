@@ -19,7 +19,7 @@ class profitLoss implements q {
 
         const opt: AtLeast<1, number> = [selling];
         while (opt.length < 6) {
-            opt.push(fake(selling, Math.floor(selling * 0.8), Math.floor(selling * 1.2), opt));
+            opt.push(incorrectAnswerCreate(selling, Math.floor(selling * 0.8), Math.floor(selling * 1.2), opt));
         }
         opt.sort((a, b) => a - b);
         const optHtml = optHtmlCreate(opt);
@@ -48,7 +48,7 @@ class profitLoss implements q {
 
         const opt: AtLeast<1, number> = [ans];
         while (opt.length < 6) {
-            opt.push(fake(ans, Math.floor(ans * 0.7), Math.floor(ans * 1.3), opt));
+            opt.push(incorrectAnswerCreate(ans, Math.floor(ans * 0.7), Math.floor(ans * 1.3), opt));
         }
         opt.sort((a, b) => a - b);
         const optHtml = optHtmlCreate(opt);
@@ -79,7 +79,7 @@ class profitLoss implements q {
 
         let opt: AtLeast<1, number> = [cost / 100];
         while (opt.length < 6) {
-            opt.push(fake(cost / 100, Math.max(20, cost / 100 - 10), Math.min(40, cost / 100 + 10), opt));
+            opt.push(incorrectAnswerCreate(cost / 100, Math.max(20, cost / 100 - 10), Math.min(40, cost / 100 + 10), opt));
         }
         for (let i = 0; i < opt.length; i++) {
             opt[i] *= 100;

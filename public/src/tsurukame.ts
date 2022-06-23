@@ -17,7 +17,7 @@ class tsurukame implements q {
 
         const opt: AtLeast<1, number> = apple !== orange ? [apple, orange] : [apple];
         while (opt.length < 6) {
-            opt.push(fake(apple, Math.ceil(apple / 10), sum, opt));
+            opt.push(incorrectAnswerCreate(apple, Math.ceil(apple / 10), sum, opt));
         }
         opt.sort((a, b) => a - b);
         const optHtml: string = optHtmlCreate(opt);
@@ -48,7 +48,7 @@ class tsurukame implements q {
 
         const opt: AtLeast<1, number> = [apple];
         while (opt.length < 6) {
-            opt.push(fake(apple, Math.ceil(apple / 10), sum, opt));
+            opt.push(incorrectAnswerCreate(apple, Math.ceil(apple / 10), sum, opt));
         }
         opt.sort((a, b) => a - b);
         const optHtml: string = optHtmlCreate(opt);
@@ -72,7 +72,7 @@ class tsurukame implements q {
 
         const opt: AtLeast<1, number> = [apple];
         while (opt.length < 6) {
-            opt.push(fake(apple, Math.ceil(apple / 10), sum, opt, true));
+            opt.push(incorrectAnswerCreate(apple, Math.ceil(apple / 10), sum, opt, true));
         }
         opt.sort((a, b) => a - b);
         const optHtml: string = optHtmlCreate(opt);
