@@ -94,6 +94,19 @@ $("#start").on("click", () => {
 });
 
 const start = async (type: questions, diff: diffList, n: number) => {
+    if (!isConvertibleNumber(Number($("#timeLimit").val()))) {
+        alert("入力値が不正です");
+        return;
+    }
+    const timeLimit: number = Number($("#timeLimit").val());
+    if (!isNumber(timeLimit)) {
+        alert("入力値が不正です");
+        return;
+    }
+    if (timeLimit > Number.MAX_SAFE_INTEGER) {
+        alert("制限時間が大きすぎます");
+        return;
+    }
     let question: questionTypes;
     switch (type) {
         case questions.tsurukame:
@@ -110,15 +123,6 @@ const start = async (type: questions, diff: diffList, n: number) => {
     }
 
     const ansList: boolean[] = [];
-    if (!isConvertibleNumber(Number($("#timeLimit").val()))) {
-        alert("入力値が不正です");
-        return;
-    }
-    const timeLimit: number = Number($("#timeLimit").val());
-    if (!isNumber(timeLimit)) {
-        alert("入力値が不正です");
-        return;
-    }
     const notTime: boolean = $("#inf").prop("checked");
     for (let i = 1; i <= n; i++) {
         const dic: dict =
@@ -133,8 +137,12 @@ const start = async (type: questions, diff: diffList, n: number) => {
             $("#time").html(`<p>残り${timeLimit}秒</p>`);
             await timeCount(timeLimit);
         }
+        if (!isConvertibleNumber($("input[name='ans']:checked").val())) {
+            alert("入力値が不正です");
+            return;
+        }
         const userAns: number = Number($("input[name='ans']:checked").val());
-        if (userAns === NaN) {
+        if (!isNumber(userAns)) {
             alert("入力値が不正です");
             return;
         }
@@ -156,11 +164,24 @@ const start = async (type: questions, diff: diffList, n: number) => {
         }
     });
     html = `<h3>${n}問中${cnt}問正解</h4>` + html;
-    html += `<button onclick="location.href='index.html'">戻る</button>`;
+    html += `<button onclick="location.href='/'">戻る</button>`;
     $("#result").html(html);
 };
 
 const randomStart = async (type: questions, diff: diffList, n: number) => {
+    if (!isConvertibleNumber(Number($("#timeLimit").val()))) {
+        alert("入力値が不正です");
+        return;
+    }
+    const timeLimit: number = Number($("#timeLimit").val());
+    if (!isNumber(timeLimit)) {
+        alert("入力値が不正です");
+        return;
+    }
+    if (timeLimit > Number.MAX_SAFE_INTEGER) {
+        alert("制限時間が大きすぎます");
+        return;
+    }
     let question: questionTypes;
     const typeRandom = type === questions.random;
     const diffRandom = diff === diffList.random;
@@ -179,7 +200,6 @@ const randomStart = async (type: questions, diff: diffList, n: number) => {
             break;
     }
     const ansList: boolean[] = [];
-    const timeLimit: number = Number($("#timeLimit").val());
     const notTime: boolean = $("#inf").prop("checked");
     for (let i = 1; i <= n; i++) {
         if (typeRandom) {
@@ -219,7 +239,7 @@ const randomStart = async (type: questions, diff: diffList, n: number) => {
         }
     });
     html = `<h3>${n}問中${cnt}問正解</h4>` + html;
-    html += `<button onclick="location.href='index.html'">戻る</button>`;
+    html += `<button onclick="location.href='/'">戻る</button>`;
     $("#result").html(html);
 };
 
