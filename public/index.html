@@ -26,7 +26,7 @@
     <div id="main">
         <div id="select">
             <h2>SPI</h2>
-            <form>
+            <form onsubmit="return false">
                 問題数 (最大99問) : <input type="number" name="questionNum" id="questionNum" value="5" min="1" max="99" required><br>
                 制限時間 (秒/1問) : <input type="number" name="timeLimit" id="timeLimit" value="60" min="1" required><br>
                 <label><input type="checkbox" name="inf" id="inf">制限時間無し</label><br><br>
