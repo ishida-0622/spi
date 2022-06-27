@@ -1,3 +1,12 @@
+import $ from "jquery";
+import { q } from "./modules/interface";
+import { dict, AtLeast } from "./modules/types";
+import { diffList } from "./modules/enums";
+import optHtmlCreate from "./modules/htmlCreate/optHtmlCreate";
+import incorrectAnswerCreate from "./modules/incorrectAnswerCreate";
+import getRandomInt from "./modules/number/getRandomInt";
+import orgRound from "./modules/number/orgRound";
+
 class profitLoss implements q {
     easy(rep: number): dict {
         const cost = getRandomInt(10, 30) * 100; // 原価 1000~3000 100刻み
@@ -153,7 +162,7 @@ class profitLoss implements q {
     }
 }
 
-const profitLossResult = (
+export const profitLossResult = (
     userAns: number,
     dic: dict,
     diff: diffList
@@ -274,3 +283,5 @@ const profitLossResult = (
     $("#result").html(html);
     return userAns === dic.profitLoss!.ans;
 };
+
+export default profitLoss;

@@ -1,167 +1,15 @@
 // Hello TypeScript
-
-/**
- * value is number?
- * @param val any value
- * @returns true if val is number and val is not NaN. false else.
- */
-const isNumber = (val: unknown): boolean => {
-    return typeof val === "number" && isFinite(val);
-};
-
-const isConvertibleNumber = (val: unknown): boolean => {
-    if (typeof val === "number") {
-        return isFinite(val);
-    } else if (typeof val === "string") {
-        return Number(val) === parseFloat(val);
-    }
-    return false;
-};
-
-/**
- * returns random int. min <= return <= max
- * @param min minimum value
- * @param max max value
- * @param exclude_num numbers to exclude
- * @returns min to max random int
- */
-const getRandomInt = (
-    min: number,
-    max: number,
-    ...exclude_num: number[]
-): number => {
-    let res = Math.floor(Math.random() * (max - min + 1) + min);
-    while (exclude_num.some((val) => val === res)) {
-        res = Math.floor(Math.random() * (max - min + 1) + min);
-    }
-    return res;
-};
-
-/**
- * round numbers to n decimal places
- * @param value any number
- * @param digit digit default -> 0
- * @returns number rounded to n decimal places
- */
-const orgRound = (value: number, digit: number = 0): number => {
-    return Math.round(value * 10 ** digit) / 10 ** digit;
-};
-
-/**
- * array shuffle
- * @param arr any array
- * @returns shuffled array
- */
-const shuffle = <T>(arr: T[]): T[] => {
-    for (let i = arr.length - 1; i >= 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-};
-
-/**
- * two array equal?
- * @param a any array
- * @param b any array
- * @returns a === b ? true : false
- */
-const array_equal = <T>(a: T[], b: T[]): boolean => {
-    if (a.length !== b.length) {
-        return false;
-    }
-    for (let i = 0; i < a.length; i++) {
-        if (a[i] !== b[i]) {
-            return false;
-        }
-    }
-    return true;
-};
-
-/**
- * incorrect answer create
- * @param ans answer
- * @param min minimum value
- * @param max max value
- * @param arr already exists options. default -> []
- * @param evenOdd true -> match even odd numbers with answer. default -> false
- * @returns returns is not equal answer and not in arr
- */
-const incorrectAnswerCreate = (
-    ans: number,
-    min: number,
-    max: number,
-    arr: number[] = [],
-    evenOdd: boolean = false
-): number => {
-    let res = getRandomInt(min, max);
-    if (
-        max - min < arr.length ||
-        (evenOdd && Math.ceil((max - min) / 2) <= arr.length)
-    ) {
-        // 最小値から最大値まで全てを使い切っている場合の無限ループ回避
-        return 0;
-    }
-    while (
-        res === ans ||
-        arr.some((val) => val === res) ||
-        (evenOdd && res % 2 !== ans % 2)
-    ) {
-        res = getRandomInt(min, max);
-    }
-    return res;
-};
-
-/**
- * radio button html create
- * @param arr length 1 or more array
- * @returns radio button html
- */
-const optHtmlCreate = <T>(arr: AtLeast<1, T>): string => {
-    if (arr.length < 1) {
-        throw new Error("main.ts line 86. array length = 0");
-    }
-    let res = `<label><input type="radio" name="ans" class="ans" value="${arr[0]}" checked>${arr[0]}</label>`;
-    for (let i = 1; i < arr.length; i++) {
-        res += `<label><input type="radio" name="ans" class="ans" value="${arr[i]}">${arr[i]}</label>`;
-        if (i === Math.round(arr.length / 2) - 1) {
-            res += "<br>";
-        }
-    }
-    res += `<br><button id="next">解答・解説へ</button>`;
-    return res;
-};
-
-/**
- * time counts until over time limit or id="next" element is clicked
- * @param s time limit. by seconds
- */
-const timeCount = (s: number) =>
-    new Promise<void>((resolve) => {
-        const timer = setInterval(() => {
-            s--;
-            $("#time").html(`<p>残り${s}秒</p>`);
-            if (s == 0) {
-                clearInterval(timer);
-                resolve();
-            }
-        }, 1000);
-
-        $("#next").on("click", () => {
-            clearInterval(timer);
-            resolve();
-        });
-    });
-
-/**
- * stop until id="next" element is clicked
- */
-const pause = () =>
-    new Promise<void>((resolve) => {
-        $("#next").on("click", () => {
-            resolve();
-        });
-    });
+import $ from "jquery";
+import { dict, questionTypes } from "./modules/types";
+import { diffList } from "./modules/enums";
+import inference, { inferenceResult } from "./inference";
+import profitLoss, { profitLossResult } from "./profitLoss";
+import tsurukame, { turukameResult } from "./tsurukame";
+import getRandomInt from "./modules/number/getRandomInt";
+import isConvertibleNumber from "./modules/number/isConvertibleNumber";
+import isNumber from "./modules/number/isNumber";
+import pause from "./modules/timer/pause";
+import timeCount from "./modules/timer/timeCount";
 
 const result = (userAns: number, dic: dict, diff: diffList, type: questions) =>
     new Promise<boolean>((resolve) => {
@@ -416,16 +264,6 @@ const randomDiff = () => {
 };
 
 /**
- * difficulty list
- */
-enum diffList {
-    e,
-    n,
-    h,
-    random,
-}
-
-/**
  * question type
  */
 enum questions {
@@ -433,80 +271,4 @@ enum questions {
     inference,
     profitLoss,
     random,
-}
-
-type questionTypes = tsurukame | inference | profitLoss;
-
-// 参考 https://qiita.com/uhyo/items/80ce7c00f413c1d1be56
-type Append<Elm, T extends unknown[]> = ((
-    arg: Elm,
-    ...rest: T
-) => void) extends (...args: infer T2) => void
-    ? T2
-    : never;
-
-type AtLeast<N extends number, T> = AtLeastRec<N, T, T[], []>;
-
-type AtLeastRec<Num, Elm, T extends unknown[], C extends unknown[]> = {
-    0: T;
-    1: AtLeastRec<Num, Elm, Append<Elm, T>, Append<unknown, C>>;
-}[C extends { length: Num } ? 0 : 1];
-
-// 参考 https://qiita.com/uhyo/items/583ddf7af3b489d5e8e9
-type RequireOne<T, K extends keyof T = keyof T> = K extends keyof T
-    ? PartialRequire<T, K>
-    : never;
-type PartialRequire<O, K extends keyof O> = {
-    [P in K]-?: O[P];
-} & O;
-
-type dict = RequireOne<{
-    /**鶴亀算*/
-    tsurukame?: {
-        ans: number;
-        apple: number;
-        appleValues: number;
-        orange: number;
-        orangeValues: number;
-        banana?: number;
-        bananaValues?: number;
-        sum: number;
-        sumValues: number;
-        /**問題文のHTML*/
-        html: string;
-    };
-    /**推論*/
-    inference?: {
-        ans: number;
-        arr: string[];
-        a: number;
-        b: number;
-        c: number;
-        d: number;
-        e?: number;
-        /**問題文のHTML*/
-        html: string;
-    };
-    /**損益算*/
-    profitLoss?: {
-        ans: number;
-        /**原価*/
-        cost: number;
-        /**利益率*/
-        profit: number;
-        /**定価*/
-        regular: number;
-        /**割引率*/
-        discount: number;
-        /**最終的な売値*/
-        selling: number;
-        /**問題文のHTML*/
-        html: string;
-    };
-}>;
-
-interface q {
-    easy(rep: number): dict;
-    normal(rep: number): dict;
-    hard(rep: number): dict;
 }

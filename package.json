@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
     "build": "webpack --mode development",
-    "fmt": "prettier --write public/src/**/*.{ts,html,css}",
-    "all": "run-s fmt build"
+    "fmt": "prettier --write src/**/*.{ts,html,css}",
+    "all": "run-s fmt tsc build"
   },
   "author": "",
   "license": "ISC",

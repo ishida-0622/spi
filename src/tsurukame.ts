@@ -1,3 +1,11 @@
+import $ from "jquery";
+import { q } from "./modules/interface";
+import { dict, AtLeast } from "./modules/types";
+import { diffList } from "./modules/enums";
+import optHtmlCreate from "./modules/htmlCreate/optHtmlCreate";
+import incorrectAnswerCreate from "./modules/incorrectAnswerCreate";
+import getRandomInt from "./modules/number/getRandomInt";
+
 class tsurukame implements q {
     easy(rep: number): dict {
         const sum = getRandomInt(10, 30); // 合計数
@@ -153,7 +161,7 @@ class tsurukame implements q {
     }
 }
 
-const turukameResult = (
+export const turukameResult = (
     userAns: number,
     dic: dict,
     diff: diffList
@@ -337,3 +345,5 @@ const turukameResult = (
     $("#result").html(html);
     return userAns === dic.tsurukame!.ans;
 };
+
+export default tsurukame;
