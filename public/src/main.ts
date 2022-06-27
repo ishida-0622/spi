@@ -6,8 +6,17 @@
  * @returns true if val is number and val is not NaN. false else.
  */
 const isNumber = (val: unknown): boolean => {
-    return typeof val === "number" && isFinite(val)
-}
+    return typeof val === "number" && isFinite(val);
+};
+
+const isConvertibleNumber = (val: unknown): boolean => {
+    if (typeof val === "number") {
+        return isFinite(val);
+    } else if (typeof val === "string") {
+        return Number(val) === parseFloat(val);
+    }
+    return false;
+};
 
 /**
  * returns random int. min <= return <= max
@@ -16,13 +25,17 @@ const isNumber = (val: unknown): boolean => {
  * @param exclude_num numbers to exclude
  * @returns min to max random int
  */
-const getRandomInt = (min: number, max: number, ...exclude_num: number[]): number => {
+const getRandomInt = (
+    min: number,
+    max: number,
+    ...exclude_num: number[]
+): number => {
     let res = Math.floor(Math.random() * (max - min + 1) + min);
-    while (exclude_num.some(val => val === res)) {
+    while (exclude_num.some((val) => val === res)) {
         res = Math.floor(Math.random() * (max - min + 1) + min);
     }
     return res;
-}
+};
 
 /**
  * round numbers to n decimal places
@@ -31,8 +44,8 @@ const getRandomInt = (min: number, max: number, ...exclude_num: number[]): numbe
  * @returns number rounded to n decimal places
  */
 const orgRound = (value: number, digit: number = 0): number => {
-    return Math.round(value * (10 ** digit)) / (10 ** digit);
-}
+    return Math.round(value * 10 ** digit) / 10 ** digit;
+};
 
 /**
  * array shuffle
@@ -45,7 +58,7 @@ const shuffle = <T>(arr: T[]): T[] => {
         [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
-}
+};
 
 /**
  * two array equal?
@@ -63,7 +76,7 @@ const array_equal = <T>(a: T[], b: T[]): boolean => {
         }
     }
     return true;
-}
+};
 
 /**
  * incorrect answer create
@@ -74,16 +87,30 @@ const array_equal = <T>(a: T[], b: T[]): boolean => {
  * @param evenOdd true -> match even odd numbers with answer. default -> false
  * @returns returns is not equal answer and not in arr
  */
-const incorrectAnswerCreate = (ans: number, min: number, max: number, arr: number[] = [], evenOdd: boolean = false): number => {
+const incorrectAnswerCreate = (
+    ans: number,
+    min: number,
+    max: number,
+    arr: number[] = [],
+    evenOdd: boolean = false
+): number => {
     let res = getRandomInt(min, max);
-    if ((max - min < arr.length) || (evenOdd && Math.ceil((max - min) / 2) <= arr.length)) { // 最小値から最大値まで全てを使い切っている場合の無限ループ回避
+    if (
+        max - min < arr.length ||
+        (evenOdd && Math.ceil((max - min) / 2) <= arr.length)
+    ) {
+        // 最小値から最大値まで全てを使い切っている場合の無限ループ回避
         return 0;
     }
-    while (res === ans || arr.some(val => val === res) || (evenOdd && res % 2 !== ans % 2)) {
+    while (
+        res === ans ||
+        arr.some((val) => val === res) ||
+        (evenOdd && res % 2 !== ans % 2)
+    ) {
         res = getRandomInt(min, max);
     }
     return res;
-}
+};
 
 /**
  * radio button html create
@@ -96,73 +123,80 @@ const optHtmlCreate = <T>(arr: AtLeast<1, T>): string => {
     }
     let res = `<label><input type="radio" name="ans" class="ans" value="${arr[0]}" checked>${arr[0]}</label>`;
     for (let i = 1; i < arr.length; i++) {
-        res += `<label><input type="radio" name="ans" class="ans" value="${arr[i]}">${arr[i]}</label>`
+        res += `<label><input type="radio" name="ans" class="ans" value="${arr[i]}">${arr[i]}</label>`;
         if (i === Math.round(arr.length / 2) - 1) {
-            res += "<br>"
+            res += "<br>";
         }
     }
     res += `<br><button id="next">解答・解説へ</button>`;
     return res;
-}
+};
 
 /**
  * time counts until over time limit or id="next" element is clicked
  * @param s time limit. by seconds
  */
-const timeCount = (s: number) => new Promise<void>((resolve) => {
-    const timer = setInterval(() => {
-        s--;
-        $("#time").html(`<p>残り${s}秒</p>`);
-        if (s == 0) {
+const timeCount = (s: number) =>
+    new Promise<void>((resolve) => {
+        const timer = setInterval(() => {
+            s--;
+            $("#time").html(`<p>残り${s}秒</p>`);
+            if (s == 0) {
+                clearInterval(timer);
+                resolve();
+            }
+        }, 1000);
+
+        $("#next").on("click", () => {
             clearInterval(timer);
             resolve();
-        }
-    }, 1000);
-
-    $("#next").on("click", () => {
-        clearInterval(timer);
-        resolve();
+        });
     });
-});
 
 /**
  * stop until id="next" element is clicked
  */
-const pause = () => new Promise<void>((resolve) => {
-    $("#next").on("click", () => {
-        resolve();
+const pause = () =>
+    new Promise<void>((resolve) => {
+        $("#next").on("click", () => {
+            resolve();
+        });
     });
-});
 
-const result = (userAns: number, dic: dict, diff: diffList, type: questions) => new Promise<boolean>((resolve) => {
-    let res: boolean;
-    switch (type) {
-        case questions.tsurukame:
-            res = turukameResult(userAns, dic, diff);
-            break;
-        case questions.inference:
-            res = inferenceResult(userAns, dic, diff);
-            break;
-        case questions.profitLoss:
-            res = profitLossResult(userAns, dic, diff);
-            break;
-        default:
-            res = false;
-            break;
-    }
+const result = (userAns: number, dic: dict, diff: diffList, type: questions) =>
+    new Promise<boolean>((resolve) => {
+        let res: boolean;
+        switch (type) {
+            case questions.tsurukame:
+                res = turukameResult(userAns, dic, diff);
+                break;
+            case questions.inference:
+                res = inferenceResult(userAns, dic, diff);
+                break;
+            case questions.profitLoss:
+                res = profitLossResult(userAns, dic, diff);
+                break;
+            default:
+                res = false;
+                break;
+        }
 
-    $("#next").on("click", () => {
-        $("#result").html("");
-        resolve(res);
+        $("#next").on("click", () => {
+            $("#result").html("");
+            resolve(res);
+        });
     });
-});
 
 $("#start").on("click", () => {
-    if (!isNumber($("#questionNum").val())) {
-        alert("入力値が不正です 162");
+    if (!isConvertibleNumber($("#questionNum").val())) {
+        alert("入力値が不正です");
         return;
     }
     const qNum = Number($("#questionNum").val());
+    if (!isNumber(qNum)) {
+        alert("入力値が不正です");
+        return;
+    }
     if (qNum < 1 || qNum > 99) {
         alert("1~99の数値を入れてください");
         return;
@@ -185,7 +219,7 @@ $("#start").on("click", () => {
             questionType = questions.random;
             break;
         default:
-            throw new Error("main.ts 178. questionTypeが不正");
+            throw new Error("questionTypeが不正");
     }
     switch (diff) {
         case "easy":
@@ -201,7 +235,7 @@ $("#start").on("click", () => {
             diffType = diffList.random;
             break;
         default:
-            throw new Error("main.ts 194. diffが不正");
+            throw new Error("diffが不正");
     }
     if (questionType === questions.random || diffType === diffList.random) {
         randomStart(questionType, diffType, qNum);
@@ -215,27 +249,36 @@ const start = async (type: questions, diff: diffList, n: number) => {
     let question: questionTypes;
     switch (type) {
         case questions.tsurukame:
-            question = new tsurukame;
+            question = new tsurukame();
             break;
         case questions.profitLoss:
-            question = new profitLoss;
+            question = new profitLoss();
             break;
         case questions.inference:
-            question = new inference;
+            question = new inference();
             break;
         default:
             throw new Error("err3");
     }
 
     const ansList: boolean[] = [];
-    if (!isNumber(Number($("#timeLimit").val()))) {
-        alert("入力値が不正です 232");
+    if (!isConvertibleNumber(Number($("#timeLimit").val()))) {
+        alert("入力値が不正です");
         return;
     }
     const timeLimit: number = Number($("#timeLimit").val());
+    if (!isNumber(timeLimit)) {
+        alert("入力値が不正です");
+        return;
+    }
     const notTime: boolean = $("#inf").prop("checked");
     for (let i = 1; i <= n; i++) {
-        const dic: dict = diff === diffList.e ? question.easy(i) : diff === diffList.n ? question.normal(i) : question.hard(i);
+        const dic: dict =
+            diff === diffList.e
+                ? question.easy(i)
+                : diff === diffList.n
+                ? question.normal(i)
+                : question.hard(i);
         if (notTime) {
             await pause();
         } else {
@@ -267,7 +310,7 @@ const start = async (type: questions, diff: diffList, n: number) => {
     html = `<h3>${n}問中${cnt}問正解</h4>` + html;
     html += `<button onclick="location.href='index.html'">戻る</button>`;
     $("#result").html(html);
-}
+};
 
 const randomStart = async (type: questions, diff: diffList, n: number) => {
     let question: questionTypes;
@@ -275,13 +318,13 @@ const randomStart = async (type: questions, diff: diffList, n: number) => {
     const diffRandom = diff === diffList.random;
     switch (type) {
         case questions.tsurukame:
-            question = new tsurukame;
+            question = new tsurukame();
             break;
         case questions.profitLoss:
-            question = new profitLoss;
+            question = new profitLoss();
             break;
         case questions.inference:
-            question = new inference;
+            question = new inference();
             break;
         default:
             [question, type] = randomQuestion();
@@ -297,7 +340,12 @@ const randomStart = async (type: questions, diff: diffList, n: number) => {
         if (diffRandom) {
             diff = randomDiff();
         }
-        const dic: dict = diff === diffList.e ? question.easy(i) : diff === diffList.n ? question.normal(i) : question.hard(i);
+        const dic: dict =
+            diff === diffList.e
+                ? question.easy(i)
+                : diff === diffList.n
+                ? question.normal(i)
+                : question.hard(i);
         if (notTime) {
             await pause();
         } else {
@@ -325,31 +373,31 @@ const randomStart = async (type: questions, diff: diffList, n: number) => {
     html = `<h3>${n}問中${cnt}問正解</h4>` + html;
     html += `<button onclick="location.href='index.html'">戻る</button>`;
     $("#result").html(html);
-}
+};
 
 const randomQuestion = () => {
     let res: [questionTypes, questions];
-    const n = getRandomInt(0,questions.random-1);
+    const n = getRandomInt(0, questions.random - 1);
     switch (n) {
         case 0:
-            res = [new tsurukame, questions.tsurukame];
+            res = [new tsurukame(), questions.tsurukame];
             break;
         case 1:
-            res = [new inference, questions.inference];
+            res = [new inference(), questions.inference];
             break;
         case 2:
-            res = [new profitLoss, questions.profitLoss];
+            res = [new profitLoss(), questions.profitLoss];
             break;
         default:
-            res = [new tsurukame, questions.tsurukame];
+            res = [new tsurukame(), questions.tsurukame];
             break;
     }
     return res;
-}
+};
 
 const randomDiff = () => {
     let res: diffList;
-    const n = getRandomInt(0, diffList.random-1);
+    const n = getRandomInt(0, diffList.random - 1);
     switch (n) {
         case 0:
             res = diffList.e;
@@ -365,7 +413,7 @@ const randomDiff = () => {
             break;
     }
     return res;
-}
+};
 
 /**
  * difficulty list
@@ -393,7 +441,7 @@ type questionTypes = tsurukame | inference | profitLoss;
 type Append<Elm, T extends unknown[]> = ((
     arg: Elm,
     ...rest: T
-) => void) extends ((...args: infer T2) => void)
+) => void) extends (...args: infer T2) => void
     ? T2
     : never;
 
@@ -405,10 +453,11 @@ type AtLeastRec<Num, Elm, T extends unknown[], C extends unknown[]> = {
 }[C extends { length: Num } ? 0 : 1];
 
 // 参考 https://qiita.com/uhyo/items/583ddf7af3b489d5e8e9
-type RequireOne<T, K extends keyof T = keyof T> =
-    K extends keyof T ? PartialRequire<T, K> : never;
+type RequireOne<T, K extends keyof T = keyof T> = K extends keyof T
+    ? PartialRequire<T, K>
+    : never;
 type PartialRequire<O, K extends keyof O> = {
-    [P in K]-?: O[P]
+    [P in K]-?: O[P];
 } & O;
 
 type dict = RequireOne<{
@@ -453,7 +502,7 @@ type dict = RequireOne<{
         selling: number;
         /**問題文のHTML*/
         html: string;
-    }
+    };
 }>;
 
 interface q {
