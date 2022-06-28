@@ -12,22 +12,22 @@ import pause from "./modules/timer/pause";
 import timeCount from "./modules/timer/timeCount";
 
 const result = (userAns: number, dic: dict, diff: diffList, type: questions) =>
-new Promise<boolean>((resolve) => {
-    let res: boolean;
-    switch (type) {
-        case questions.tsurukame:
-            res = turukameResult(userAns, dic, diff);
-            break;
-        case questions.inference:
-            res = inferenceResult(userAns, dic, diff);
-            break;
-        case questions.profitLoss:
-            res = profitLossResult(userAns, dic, diff);
-            break;
-        default:
-            res = false;
-            break;
-    }
+    new Promise<boolean>((resolve) => {
+        let res: boolean;
+        switch (type) {
+            case questions.tsurukame:
+                res = turukameResult(userAns, dic, diff);
+                break;
+            case questions.inference:
+                res = inferenceResult(userAns, dic, diff);
+                break;
+            case questions.profitLoss:
+                res = profitLossResult(userAns, dic, diff);
+                break;
+            default:
+                res = false;
+                break;
+        }
 
         $("#next").on("click", () => {
             $("#result").html("");
