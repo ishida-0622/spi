@@ -94,7 +94,7 @@ $("#start").on("click", () => {
 });
 
 const start = async (type: questions, diff: diffList, n: number) => {
-    if (!isConvertibleNumber(Number($("#timeLimit").val()))) {
+    if (!isConvertibleNumber($("#timeLimit").val())) {
         alert("入力値が不正です");
         return;
     }
@@ -169,7 +169,7 @@ const start = async (type: questions, diff: diffList, n: number) => {
 };
 
 const randomStart = async (type: questions, diff: diffList, n: number) => {
-    if (!isConvertibleNumber(Number($("#timeLimit").val()))) {
+    if (!isConvertibleNumber($("#timeLimit").val())) {
         alert("入力値が不正です");
         return;
     }
