@@ -9,7 +9,7 @@ const timeCount = (s: number) =>
         const timer = setInterval(() => {
             s--;
             $("#time").html(`<p>残り${s}秒</p>`);
-            if (s == 0) {
+            if (s === 0) {
                 clearInterval(timer);
                 resolve();
             }

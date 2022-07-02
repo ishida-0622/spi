@@ -1,7 +1,9 @@
-import dict from "./types/dict";
+import dict from "../types/dict";
 
-export interface q {
+interface QuestionBase {
     easy(rep: number): dict;
     normal(rep: number): dict;
     hard(rep: number): dict;
 }
+
+export default QuestionBase;
