@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { q } from "./modules/interface";
+import QuestionBase from "./modules/interfaces/questionBase";
 import { diffList } from "./modules/enums";
 import optHtmlCreate from "./modules/htmlCreate/optHtmlCreate";
 import incorrectAnswerCreate from "./modules/incorrectAnswerCreate";
@@ -8,7 +8,7 @@ import orgRound from "./modules/number/orgRound";
 import AtLeast from "modules/types/atLeast";
 import dict from "modules/types/dict";
 
-class ProfitLoss implements q {
+class ProfitLoss implements QuestionBase {
     easy(rep: number): dict {
         const cost = getRandomInt(10, 30) * 100; // 原価 1000~3000 100刻み
         const profit = getRandomInt(2, 5) / 10; // 利益率 0.2~0.5 0.1刻み

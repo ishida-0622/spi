@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { q } from "./modules/interface";
+import QuestionBase from "./modules/interfaces/questionBase";
 import { diffList } from "./modules/enums";
 import optHtmlCreate from "./modules/htmlCreate/optHtmlCreate";
 import incorrectAnswerCreate from "./modules/incorrectAnswerCreate";
@@ -7,7 +7,7 @@ import getRandomInt from "./modules/number/getRandomInt";
 import AtLeast from "modules/types/atLeast";
 import dict from "modules/types/dict";
 
-class Tsurukame implements q {
+class Tsurukame implements QuestionBase {
     easy(rep: number): dict {
         const sum = getRandomInt(10, 30); // 合計数
         const apple = getRandomInt(1, sum - 1); // りんごの数
