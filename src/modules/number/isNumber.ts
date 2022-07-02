@@ -1,10 +1,10 @@
 /**
  * value is number?
- * @param val any value
- * @returns true if val is number and val is not NaN. false else.
+ * @param value any value
+ * @returns true if value is number and value is not NaN. false else.
  */
-const isNumber = (val: unknown): boolean => {
-    return typeof val === "number" && isFinite(val);
+const isNumber = (value: unknown): boolean => {
+    return typeof value === "number" && isFinite(value);
 };
 
 export default isNumber;
