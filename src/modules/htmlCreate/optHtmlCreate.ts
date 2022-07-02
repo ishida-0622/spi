@@ -1,4 +1,4 @@
-import { AtLeast } from "../types";
+import AtLeast from "../types/atLeast";
 
 /**
  * radio button html create

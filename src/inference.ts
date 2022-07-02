@@ -1,10 +1,10 @@
 import $ from "jquery";
 import { q } from "./modules/interface";
-import { dict } from "./modules/types";
 import { diffList } from "./modules/enums";
 import shuffle from "./modules/array/arrayShuffle";
 import getRandomInt from "./modules/number/getRandomInt";
 import arrayEqual from "./modules/array/arrayEqual";
+import dict from "modules/types/dict";
 
 class Inference implements q {
     easy(rep: number): dict {

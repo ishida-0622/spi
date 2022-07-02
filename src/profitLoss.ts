@@ -1,11 +1,12 @@
 import $ from "jquery";
 import { q } from "./modules/interface";
-import { dict, AtLeast } from "./modules/types";
 import { diffList } from "./modules/enums";
 import optHtmlCreate from "./modules/htmlCreate/optHtmlCreate";
 import incorrectAnswerCreate from "./modules/incorrectAnswerCreate";
 import getRandomInt from "./modules/number/getRandomInt";
 import orgRound from "./modules/number/orgRound";
+import AtLeast from "modules/types/atLeast";
+import dict from "modules/types/dict";
 
 class ProfitLoss implements q {
     easy(rep: number): dict {

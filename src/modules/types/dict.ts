@@ -1,33 +1,6 @@
-import inference from "../inference";
-import profitLoss from "../profitLoss";
-import tsurukame from "../tsurukame";
+import RequireOne from "./requireOne";
 
-// 参考 https://qiita.com/uhyo/items/80ce7c00f413c1d1be56
-type Append<Elm, T extends unknown[]> = ((
-    arg: Elm,
-    ...rest: T
-) => void) extends (...args: infer T2) => void
-    ? T2
-    : never;
-
-export type AtLeast<N extends number, T> = AtLeastRec<N, T, T[], []>;
-
-type AtLeastRec<Num, Elm, T extends unknown[], C extends unknown[]> = {
-    0: T;
-    1: AtLeastRec<Num, Elm, Append<Elm, T>, Append<unknown, C>>;
-}[C extends { length: Num } ? 0 : 1];
-
-// 参考 https://qiita.com/uhyo/items/583ddf7af3b489d5e8e9
-export type RequireOne<T, K extends keyof T = keyof T> = K extends keyof T
-    ? PartialRequire<T, K>
-    : never;
-type PartialRequire<O, K extends keyof O> = {
-    [P in K]-?: O[P];
-} & O;
-
-export type questionTypes = tsurukame | inference | profitLoss;
-
-export type dict = RequireOne<{
+type dict = RequireOne<{
     /**鶴亀算*/
     tsurukame?: {
         ans: number;
@@ -71,3 +44,5 @@ export type dict = RequireOne<{
         html: string;
     };
 }>;
+
+export default dict;
