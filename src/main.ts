@@ -6,7 +6,6 @@ import ProfitLoss, { profitLossResult } from "./profitLoss";
 import Tsurukame, { turukameResult } from "./tsurukame";
 import getRandomInt from "./modules/number/getRandomInt";
 import isConvertibleNumber from "./modules/number/isConvertibleNumber";
-import isNumber from "./modules/number/isNumber";
 import pause from "./modules/timer/pause";
 import timeCount from "./modules/timer/timeCount";
 import dict from "modules/types/dict";
@@ -42,10 +41,6 @@ $("#start").on("click", () => {
         return;
     }
     const qNum = Number($("#questionNum").val());
-    if (!isNumber(qNum)) {
-        alert("入力値が不正です");
-        return;
-    }
     if (qNum < 1 || qNum > 99) {
         alert("1~99の数値を入れてください");
         return;
@@ -100,12 +95,12 @@ const start = async (type: questions, diff: diffList, n: number) => {
         return;
     }
     const timeLimit: number = Number($("#timeLimit").val());
-    if (!isNumber(timeLimit)) {
-        alert("入力値が不正です");
+    if (timeLimit < 1) {
+        alert("制限時間が短すぎます");
         return;
     }
     if (timeLimit > Number.MAX_SAFE_INTEGER) {
-        alert("制限時間が大きすぎます");
+        alert("制限時間が長すぎます");
         return;
     }
     let question: questionTypes;
@@ -143,10 +138,6 @@ const start = async (type: questions, diff: diffList, n: number) => {
             return;
         }
         const userAns: number = Number($("input[name='ans']:checked").val());
-        if (!isNumber(userAns)) {
-            alert("入力値が不正です");
-            return;
-        }
         $("#question").html("");
         $("#ans").html("");
         $("#time").html("");
@@ -175,12 +166,12 @@ const randomStart = async (type: questions, diff: diffList, n: number) => {
         return;
     }
     const timeLimit: number = Number($("#timeLimit").val());
-    if (!isNumber(timeLimit)) {
-        alert("入力値が不正です");
+    if (timeLimit < 1) {
+        alert("制限時間が短すぎます");
         return;
     }
     if (timeLimit > Number.MAX_SAFE_INTEGER) {
-        alert("制限時間が大きすぎます");
+        alert("制限時間が長すぎます");
         return;
     }
     let question: questionTypes;
