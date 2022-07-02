@@ -7,7 +7,7 @@ import incorrectAnswerCreate from "./modules/incorrectAnswerCreate";
 import getRandomInt from "./modules/number/getRandomInt";
 import orgRound from "./modules/number/orgRound";
 
-class profitLoss implements q {
+class ProfitLoss implements q {
     easy(rep: number): dict {
         const cost = getRandomInt(10, 30) * 100; // 原価 1000~3000 100刻み
         const profit = getRandomInt(2, 5) / 10; // 利益率 0.2~0.5 0.1刻み
@@ -284,4 +284,4 @@ export const profitLossResult = (
     return userAns === dic.profitLoss!.ans;
 };
 
-export default profitLoss;
+export default ProfitLoss;

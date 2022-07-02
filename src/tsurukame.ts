@@ -6,7 +6,7 @@ import optHtmlCreate from "./modules/htmlCreate/optHtmlCreate";
 import incorrectAnswerCreate from "./modules/incorrectAnswerCreate";
 import getRandomInt from "./modules/number/getRandomInt";
 
-class tsurukame implements q {
+class Tsurukame implements q {
     easy(rep: number): dict {
         const sum = getRandomInt(10, 30); // 合計数
         const apple = getRandomInt(1, sum - 1); // りんごの数
@@ -346,4 +346,4 @@ export const turukameResult = (
     return userAns === dic.tsurukame!.ans;
 };
 
-export default tsurukame;
+export default Tsurukame;

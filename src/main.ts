@@ -2,9 +2,9 @@
 import $ from "jquery";
 import { dict, questionTypes } from "./modules/types";
 import { diffList } from "./modules/enums";
-import inference, { inferenceResult } from "./inference";
-import profitLoss, { profitLossResult } from "./profitLoss";
-import tsurukame, { turukameResult } from "./tsurukame";
+import Inference, { inferenceResult } from "./inference";
+import ProfitLoss, { profitLossResult } from "./profitLoss";
+import Tsurukame, { turukameResult } from "./tsurukame";
 import getRandomInt from "./modules/number/getRandomInt";
 import isConvertibleNumber from "./modules/number/isConvertibleNumber";
 import isNumber from "./modules/number/isNumber";
@@ -110,13 +110,13 @@ const start = async (type: questions, diff: diffList, n: number) => {
     let question: questionTypes;
     switch (type) {
         case questions.tsurukame:
-            question = new tsurukame();
+            question = new Tsurukame();
             break;
         case questions.profitLoss:
-            question = new profitLoss();
+            question = new ProfitLoss();
             break;
         case questions.inference:
-            question = new inference();
+            question = new Inference();
             break;
         default:
             throw new Error("err3");
@@ -187,13 +187,13 @@ const randomStart = async (type: questions, diff: diffList, n: number) => {
     const diffRandom = diff === diffList.random;
     switch (type) {
         case questions.tsurukame:
-            question = new tsurukame();
+            question = new Tsurukame();
             break;
         case questions.profitLoss:
-            question = new profitLoss();
+            question = new ProfitLoss();
             break;
         case questions.inference:
-            question = new inference();
+            question = new Inference();
             break;
         default:
             [question, type] = randomQuestion();
@@ -248,16 +248,16 @@ const randomQuestion = () => {
     const n = getRandomInt(0, questions.random - 1);
     switch (n) {
         case 0:
-            res = [new tsurukame(), questions.tsurukame];
+            res = [new Tsurukame(), questions.tsurukame];
             break;
         case 1:
-            res = [new inference(), questions.inference];
+            res = [new Inference(), questions.inference];
             break;
         case 2:
-            res = [new profitLoss(), questions.profitLoss];
+            res = [new ProfitLoss(), questions.profitLoss];
             break;
         default:
-            res = [new tsurukame(), questions.tsurukame];
+            res = [new Tsurukame(), questions.tsurukame];
             break;
     }
     return res;

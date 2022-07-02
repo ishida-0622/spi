@@ -6,7 +6,7 @@ import shuffle from "./modules/array/arrayShuffle";
 import getRandomInt from "./modules/number/getRandomInt";
 import arrayEqual from "./modules/array/arrayEqual";
 
-class inference implements q {
+class Inference implements q {
     easy(rep: number): dict {
         const arr: string[] = shuffle(["A", "B", "C", "D"]);
         const A =
@@ -147,4 +147,4 @@ export const inferenceResult = (
     return userAns === dic.inference!.ans;
 };
 
-export default inference;
+export default Inference;
