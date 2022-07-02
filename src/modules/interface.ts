@@ -1,4 +1,4 @@
-import { dict } from "./types";
+import dict from "./types/dict";
 
 export interface q {
     easy(rep: number): dict;

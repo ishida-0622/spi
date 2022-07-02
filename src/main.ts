@@ -1,6 +1,5 @@
 // Hello TypeScript
 import $ from "jquery";
-import { dict, questionTypes } from "./modules/types";
 import { diffList } from "./modules/enums";
 import Inference, { inferenceResult } from "./inference";
 import ProfitLoss, { profitLossResult } from "./profitLoss";
@@ -10,6 +9,8 @@ import isConvertibleNumber from "./modules/number/isConvertibleNumber";
 import isNumber from "./modules/number/isNumber";
 import pause from "./modules/timer/pause";
 import timeCount from "./modules/timer/timeCount";
+import dict from "modules/types/dict";
+import questionTypes from "modules/types/questionTypes";
 
 const result = (userAns: number, dic: dict, diff: diffList, type: questions) =>
     new Promise<boolean>((resolve) => {

@@ -1,8 +1,8 @@
 import $ from "jquery";
 import { q } from "./modules/interface";
-import { dict, AtLeast } from "./modules/types";
 import { diffList } from "./modules/enums";
 import optHtmlCreate from "./modules/htmlCreate/optHtmlCreate";
+import dict from "modules/types/dict";
 
 class WorkCalc implements q {
     easy(rep: number): dict {
@@ -15,3 +15,5 @@ class WorkCalc implements q {
         throw new Error("Method not implemented.");
     }
 }
+
+export default WorkCalc;
