@@ -6,10 +6,10 @@ import incorrectAnswerCreate from "./modules/incorrectAnswerCreate";
 import getRandomInt from "./modules/number/getRandomInt";
 import orgRound from "./modules/number/orgRound";
 import AtLeast from "modules/types/atLeast";
-import dict from "modules/types/dict";
+import valueToUse from "modules/types/valueToUse";
 
 class ProfitLoss implements QuestionBase {
-    easy(rep: number): dict {
+    easy(rep: number): valueToUse {
         const cost = getRandomInt(10, 30) * 100; // 原価 1000~3000 100刻み
         const profit = getRandomInt(2, 5) / 10; // 利益率 0.2~0.5 0.1刻み
         const regular = (cost * (10 + Math.round(profit * 10))) / 10; // 定価 原価 * (1 + 利益率)
@@ -42,7 +42,7 @@ class ProfitLoss implements QuestionBase {
         const optHtml = optHtmlCreate(opt);
         $("#ans").html(optHtml);
 
-        const res: dict = {
+        const res: valueToUse = {
             profitLoss: {
                 ans: selling,
                 cost: cost,
@@ -56,7 +56,7 @@ class ProfitLoss implements QuestionBase {
         return res;
     }
 
-    normal(rep: number): dict {
+    normal(rep: number): valueToUse {
         const cost = 100;
         const profit = getRandomInt(1, 20) / 100; // 0.01~0.2 0.01刻み
         const discount = getRandomInt(2, 6) / 20; // 0.1~0.3 0.05刻み
@@ -94,7 +94,7 @@ class ProfitLoss implements QuestionBase {
         const optHtml = optHtmlCreate(opt);
         $("#ans").html(optHtml);
 
-        const res: dict = {
+        const res: valueToUse = {
             profitLoss: {
                 ans: ans,
                 cost: cost,
@@ -108,7 +108,7 @@ class ProfitLoss implements QuestionBase {
         return res;
     }
 
-    hard(rep: number): dict {
+    hard(rep: number): valueToUse {
         const cost = getRandomInt(20, 40) * 100; // 原価 2000~4000 100刻み
         const profit = getRandomInt(2, 5) / 10; // 利益率 0.2~0.5 0.1刻み
         const regular = cost * (1 + profit); // 定価 原価 * (1 + 利益率)
@@ -148,7 +148,7 @@ class ProfitLoss implements QuestionBase {
         const optHtml = optHtmlCreate(opt);
         $("#ans").html(optHtml);
 
-        const res: dict = {
+        const res: valueToUse = {
             profitLoss: {
                 ans: cost,
                 cost: cost,
@@ -165,7 +165,7 @@ class ProfitLoss implements QuestionBase {
 
 export const profitLossResult = (
     userAns: number,
-    dic: dict,
+    dic: valueToUse,
     diff: diffList
 ): boolean => {
     let html: string;

@@ -4,10 +4,10 @@ import { diffList } from "./modules/enums";
 import shuffle from "./modules/array/arrayShuffle";
 import getRandomInt from "./modules/number/getRandomInt";
 import arrayEqual from "./modules/array/arrayEqual";
-import dict from "modules/types/dict";
+import valueToUse from "modules/types/valueToUse";
 
 class Inference implements QuestionBase {
-    easy(rep: number): dict {
+    easy(rep: number): valueToUse {
         const arr: string[] = shuffle(["A", "B", "C", "D"]);
         const A =
             arr[0] === "A" ? 1 : arr[1] === "A" ? 2 : arr[2] === "A" ? 3 : 4;
@@ -64,7 +64,7 @@ class Inference implements QuestionBase {
         `;
         $("#ans").html(optHtml);
 
-        const res: dict = {
+        const res: valueToUse = {
             inference: {
                 ans: ans!,
                 arr: arr,
@@ -78,9 +78,9 @@ class Inference implements QuestionBase {
         return res;
     }
 
-    normal(rep: number): dict {
+    normal(rep: number): valueToUse {
         $("#ans").html(`現在制作中です。<br><button id="next">次へ</button>`);
-        const res: dict = {
+        const res: valueToUse = {
             inference: {
                 ans: 0,
                 arr: [],
@@ -94,9 +94,9 @@ class Inference implements QuestionBase {
         return res;
     }
 
-    hard(rep: number): dict {
+    hard(rep: number): valueToUse {
         $("#ans").html(`現在制作中です。<br><button id="next">次へ</button>`);
-        const res: dict = {
+        const res: valueToUse = {
             inference: {
                 ans: 0,
                 arr: [],
@@ -113,7 +113,7 @@ class Inference implements QuestionBase {
 
 export const inferenceResult = (
     userAns: number,
-    dic: dict,
+    dic: valueToUse,
     diff: diffList
 ): boolean => {
     let html: string;

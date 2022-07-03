@@ -6,6 +6,7 @@ type Append<Elm, T extends unknown[]> = ((
     ? T2
     : never;
 
+/** 要素を最低N個持つT型の配列 */
 type AtLeast<N extends number, T> = AtLeastRec<N, T, T[], []>;
 
 type AtLeastRec<Num, Elm, T extends unknown[], C extends unknown[]> = {

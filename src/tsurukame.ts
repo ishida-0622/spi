@@ -5,17 +5,32 @@ import optHtmlCreate from "./modules/htmlCreate/optHtmlCreate";
 import incorrectAnswerCreate from "./modules/incorrectAnswerCreate";
 import getRandomInt from "./modules/number/getRandomInt";
 import AtLeast from "modules/types/atLeast";
-import dict from "modules/types/dict";
+import valueToUse from "modules/types/valueToUse";
 
 class Tsurukame implements QuestionBase {
-    easy(rep: number): dict {
-        const sum = getRandomInt(10, 30); // 合計数
-        const apple = getRandomInt(1, sum - 1); // りんごの数
-        const appleValues = getRandomInt(5, 30) * 10; // りんごの値段 50~300
-        const orange = sum - apple; // オレンジの数
-        const orangeValues = getRandomInt(5, 30, appleValues / 10) * 10; // オレンジの値段 50~300
+    easy(rep: number): valueToUse {
+        // 合計数 10~30
+        const sum = getRandomInt(10, 30);
+
+        // りんごの数
+        const apple = getRandomInt(1, sum - 1);
+
+        // りんごの値段 50~300
+        const appleValues = getRandomInt(5, 30) * 10;
+
+        // オレンジの数
+        const orange = sum - apple;
+
+        // オレンジの値段 50~300
+        const orangeValues = getRandomInt(5, 30, appleValues / 10) * 10;
+
+        // 合計の値段
         const sumValues = appleValues * apple + orangeValues * orange;
+
+        // 今何問目か？
         const Q = `<h3>Q.${rep}</h3>`;
+
+        // 問題文のHTML
         const html: string = `
         <p>
         1個${appleValues}円の${
@@ -26,20 +41,31 @@ class Tsurukame implements QuestionBase {
         合計${sum}個購入して合計金額が${sumValues}円だった場合、<br>
         りんごを購入した数はいくつか。
         </p>`;
+
+        // 問題文のHTMLをセット
         $("#question").html(Q + html);
 
+        // 選択肢 要素数1以上の配列 初期値はりんごとオレンジの数
         const opt: AtLeast<1, number> =
             apple !== orange ? [apple, orange] : [apple];
+
+        // 選択肢が6つになるまでループ
         while (opt.length < 6) {
             opt.push(
                 incorrectAnswerCreate(apple, Math.ceil(apple / 10), sum, opt)
             );
         }
+
+        // 選択肢をソート
         opt.sort((a, b) => a - b);
+
+        // 選択肢のHTMLを作成
         const optHtml: string = optHtmlCreate(opt);
+
+        // 選択肢のHTMLをセット
         $("#ans").html(optHtml);
 
-        const res: dict = {
+        const res: valueToUse = {
             tsurukame: {
                 ans: apple,
                 apple: apple,
@@ -54,18 +80,37 @@ class Tsurukame implements QuestionBase {
         return res;
     }
 
-    normal(rep: number): dict {
-        const sum = getRandomInt(20, 50); // 合計数 20~50
-        const apple = getRandomInt(5, sum - 10); // りんごの数
-        const appleValues = getRandomInt(5, 30) * 10; // りんごの値段 50~300
-        const banana = getRandomInt(1, sum - apple - 3); // バナナの数
-        const bananaValues = getRandomInt(5, 30, appleValues / 10) * 10; // バナナの値段 50~300
-        const orange = sum - apple - banana; // オレンジの数
+    normal(rep: number): valueToUse {
+        // 合計数 20~50
+        const sum = getRandomInt(20, 50);
+
+        // りんごの数
+        const apple = getRandomInt(5, sum - 10);
+
+        // りんごの値段 50~300
+        const appleValues = getRandomInt(5, 30) * 10;
+
+        // バナナの数
+        const banana = getRandomInt(1, sum - apple - 3);
+
+        // バナナの値段 50~300
+        const bananaValues = getRandomInt(5, 30, appleValues / 10) * 10;
+
+        // オレンジの数
+        const orange = sum - apple - banana;
+
+        // オレンジの値段 50~300
         const orangeValues =
-            getRandomInt(5, 30, appleValues / 10, bananaValues / 10) * 10; // オレンジの値段 50~300
+            getRandomInt(5, 30, appleValues / 10, bananaValues / 10) * 10;
+
+        // 合計の値段
         const sumValues =
             appleValues * apple + orangeValues * orange + banana * bananaValues;
+
+        // 今何問目か？
         const Q = `<h3>Q.${rep}</h3>`;
+
+        // 問題文のHTML
         const html: string = `
         <p>
         1個${appleValues}円の${
@@ -79,19 +124,30 @@ class Tsurukame implements QuestionBase {
         オレンジを購入した数が${orange}個だった場合、りんごはいくつ購入したか。
         </p>
         `;
+
+        // HTMLをセット
         $("#question").html(Q + html);
 
+        // 選択肢 要素数1以上の配列 初期値はりんごの数
         const opt: AtLeast<1, number> = [apple];
+
+        // 選択肢が6つになるまでループ
         while (opt.length < 6) {
             opt.push(
                 incorrectAnswerCreate(apple, Math.ceil(apple / 10), sum, opt)
             );
         }
+
+        // 選択肢をソート
         opt.sort((a, b) => a - b);
+
+        // 選択肢のHTMLを作成
         const optHtml: string = optHtmlCreate(opt);
+
+        // HTMLをセット
         $("#ans").html(optHtml);
 
-        const res: dict = {
+        const res: valueToUse = {
             tsurukame: {
                 ans: apple,
                 apple: apple,
@@ -108,17 +164,34 @@ class Tsurukame implements QuestionBase {
         return res;
     }
 
-    hard(rep: number): dict {
-        const sum = getRandomInt(30, 100); // 合計数 30~100
-        const orange = getRandomInt(5, Math.floor((sum - 15) / 2)); // オレンジの数
-        const orangeValues = getRandomInt(5, 30) * 10; // オレンジの値段 50~300
-        const banana = orange; // バナナの数 オレンジと同じ
-        const bananaValues = getRandomInt(5, 30, orangeValues / 10) * 10; // バナナの値段 50~300
-        const apple = sum - orange - banana; // りんごの数
+    hard(rep: number): valueToUse {
+        // 合計数 30~100
+        const sum = getRandomInt(30, 100);
+
+        // オレンジの数
+        const orange = getRandomInt(5, Math.floor((sum - 15) / 2));
+
+        // オレンジの値段 50~300
+        const orangeValues = getRandomInt(5, 30) * 10;
+
+        // バナナの数 オレンジと同じ
+        const banana = orange;
+
+        // バナナの値段 50~300
+        const bananaValues = getRandomInt(5, 30, orangeValues / 10) * 10;
+
+        // りんごの数
+        const apple = sum - orange - banana;
+
+        // りんごの値段 50~300
         const appleValues =
-            getRandomInt(5, 30, bananaValues / 10, orangeValues / 10) * 10; // りんごの値段 50~300
+            getRandomInt(5, 30, bananaValues / 10, orangeValues / 10) * 10;
+
+        // 合計の値段
         const sumValues =
             appleValues * apple + orangeValues * orange + banana * bananaValues;
+
+        // 問題文のHTML
         const html: string = `<h3>Q.${rep}</h3><p>1個${appleValues}円の${
             appleValues >= 200 ? "高級" : ""
         }りんごと、1個${orangeValues}円の${
@@ -128,7 +201,10 @@ class Tsurukame implements QuestionBase {
         }バナナを<br>合計${sum}個購入して合計金額が${sumValues}円だった。<br>オレンジとバナナを同じ個数買った場合、りんごはいくつ購入したか。</p>`;
         $("#question").html(html);
 
+        // 選択肢 要素数1以上の配列 初期値はりんごの数
         const opt: AtLeast<1, number> = [apple];
+
+        // 選択肢が6つになるまでループ
         while (opt.length < 6) {
             opt.push(
                 incorrectAnswerCreate(
@@ -140,11 +216,17 @@ class Tsurukame implements QuestionBase {
                 )
             );
         }
+
+        // 選択肢をソート
         opt.sort((a, b) => a - b);
+
+        // 選択肢のHTML
         const optHtml: string = optHtmlCreate(opt);
+
+        // HTMLをセット
         $("#ans").html(optHtml);
 
-        const res: dict = {
+        const res: valueToUse = {
             tsurukame: {
                 ans: apple,
                 apple: apple,
@@ -162,9 +244,16 @@ class Tsurukame implements QuestionBase {
     }
 }
 
+/**
+ * explanation of the question and correct answer
+ * @param userAns selected options
+ * @param dic value used in the question
+ * @param diff difficulty of the question
+ * @returns true if correct else false
+ */
 export const turukameResult = (
     userAns: number,
-    dic: dict,
+    dic: valueToUse,
     diff: diffList
 ): boolean => {
     let html: string;
