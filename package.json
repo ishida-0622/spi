@@ -8,7 +8,8 @@
         "tsc": "tsc",
         "build": "webpack --mode development",
         "fmt": "prettier --write src/**/*.{ts,html,css}",
-        "all": "run-s fmt tsc build"
+        "all": "run-s fmt tsc build",
+        "s": "firebase serve"
     },
     "author": "",
     "license": "ISC",
