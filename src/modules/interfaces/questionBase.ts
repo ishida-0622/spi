@@ -1,9 +1,9 @@
-import dict from "../types/dict";
+import valueToUse from "../types/valueToUse";
 
 interface QuestionBase {
-    easy(rep: number): dict;
-    normal(rep: number): dict;
-    hard(rep: number): dict;
+    easy(rep: number): valueToUse;
+    normal(rep: number): valueToUse;
+    hard(rep: number): valueToUse;
 }
 
 export default QuestionBase;

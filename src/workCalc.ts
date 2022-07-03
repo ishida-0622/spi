@@ -2,16 +2,16 @@ import $ from "jquery";
 import QuestionBase from "./modules/interfaces/questionBase";
 import { diffList } from "./modules/enums";
 import optHtmlCreate from "./modules/htmlCreate/optHtmlCreate";
-import dict from "modules/types/dict";
+import valueToUse from "modules/types/valueToUse";
 
 class WorkCalc implements QuestionBase {
-    easy(rep: number): dict {
+    easy(rep: number): valueToUse {
         throw new Error("Method not implemented.");
     }
-    normal(rep: number): dict {
+    normal(rep: number): valueToUse {
         throw new Error("Method not implemented.");
     }
-    hard(rep: number): dict {
+    hard(rep: number): valueToUse {
         throw new Error("Method not implemented.");
     }
 }

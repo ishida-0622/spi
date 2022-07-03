@@ -8,10 +8,15 @@ import getRandomInt from "./modules/number/getRandomInt";
 import isConvertibleNumber from "./modules/number/isConvertibleNumber";
 import pause from "./modules/timer/pause";
 import timeCount from "./modules/timer/timeCount";
-import dict from "modules/types/dict";
+import valueToUse from "modules/types/valueToUse";
 import questionTypes from "modules/types/questionTypes";
 
-const result = (userAns: number, dic: dict, diff: diffList, type: questions) =>
+const result = (
+    userAns: number,
+    dic: valueToUse,
+    diff: diffList,
+    type: questions
+) =>
     new Promise<boolean>((resolve) => {
         let res: boolean;
         switch (type) {
@@ -121,7 +126,7 @@ const start = async (type: questions, diff: diffList, n: number) => {
     const ansList: boolean[] = [];
     const notTime: boolean = $("#inf").prop("checked");
     for (let i = 1; i <= n; i++) {
-        const dic: dict =
+        const dic: valueToUse =
             diff === diffList.e
                 ? question.easy(i)
                 : diff === diffList.n
@@ -200,7 +205,7 @@ const randomStart = async (type: questions, diff: diffList, n: number) => {
         if (diffRandom) {
             diff = randomDiff();
         }
-        const dic: dict =
+        const dic: valueToUse =
             diff === diffList.e
                 ? question.easy(i)
                 : diff === diffList.n
