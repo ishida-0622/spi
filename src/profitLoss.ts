@@ -16,8 +16,8 @@ class ProfitLoss implements QuestionBase {
         const discount = getRandomInt(2, 8) / 20; // 割引率 0.1~0.4 0.05刻み
         const selling = Math.floor((regular * (100 - discount * 100)) / 100); // 売値 定価 * (1 - 割引率) 桁落ち回避のため整数化して計算
 
-        const Q = `<h3>Q.${rep}</h3>`;
         const html = `
+        <h3>Q.${rep}</h3>
         <p>
         商品Xの原価は${cost}円である。<br>
         この商品に${profit * 10}割の利益を乗せて定価としたが、<br>
@@ -25,7 +25,7 @@ class ProfitLoss implements QuestionBase {
         最終的な売値はいくらか。なお、小数点以下は切り捨てとする。
         </p>
         `;
-        $("#question").html(Q + html);
+        $("#question").html(html);
 
         const opt: AtLeast<1, number> = [selling];
         while (opt.length < 6) {
@@ -67,8 +67,8 @@ class ProfitLoss implements QuestionBase {
         );
         const regular = cost * ((1 + profit) / (1 - discount));
         const selling = cost + profit * 100;
-        const Q = `<h3>Q.${rep}</h3>`;
         const html = `
+        <h3>Q.${rep}</h3>
         <p>
         ある商品を定価の${discount * 100}%引きで売ったら、原価の${Math.floor(
             profit * 100
@@ -77,7 +77,7 @@ class ProfitLoss implements QuestionBase {
         なお、小数点以下は切り捨てとする。
         </p>
         `;
-        $("#question").html(Q + html);
+        $("#question").html(html);
 
         const opt: AtLeast<1, number> = [ans];
         while (opt.length < 6) {
@@ -118,8 +118,8 @@ class ProfitLoss implements QuestionBase {
             discount = getRandomInt(1, 4) / 10;
         }
         const selling = Math.round((regular * (100 - discount * 100)) / 100); // 売値
-        const Q = `<h3>Q.${rep}</h3>`;
         const html = `
+        <h3>Q.${rep}</h3>
         <p>
         ある商品に原価の${profit * 10}割の利益を得られるように定価をつけた。<br>
         しかし、売れないので定価の${discount * 10}割引で売ったところ${
@@ -128,7 +128,7 @@ class ProfitLoss implements QuestionBase {
         この商品の原価はいくらか。
         </p>
         `;
-        $("#question").html(Q + html);
+        $("#question").html(html);
 
         let opt: AtLeast<1, number> = [cost / 100];
         while (opt.length < 6) {

@@ -27,11 +27,9 @@ class Tsurukame implements QuestionBase {
         // 合計の値段
         const sumValues = appleValues * apple + orangeValues * orange;
 
-        // 今何問目か？
-        const Q = `<h3>Q.${rep}</h3>`;
-
         // 問題文のHTML
         const html: string = `
+        <h3>Q.${rep}</h3>
         <p>
         1個${appleValues}円の${
             appleValues >= 200 ? "高級" : ""
@@ -43,7 +41,7 @@ class Tsurukame implements QuestionBase {
         </p>`;
 
         // 問題文のHTMLをセット
-        $("#question").html(Q + html);
+        $("#question").html(html);
 
         // 選択肢 要素数1以上の配列 初期値はりんごとオレンジの数
         const opt: AtLeast<1, number> =
@@ -107,11 +105,9 @@ class Tsurukame implements QuestionBase {
         const sumValues =
             appleValues * apple + orangeValues * orange + banana * bananaValues;
 
-        // 今何問目か？
-        const Q = `<h3>Q.${rep}</h3>`;
-
         // 問題文のHTML
         const html: string = `
+        <h3>Q.${rep}</h3>
         <p>
         1個${appleValues}円の${
             appleValues >= 200 ? "高級" : ""
@@ -126,7 +122,7 @@ class Tsurukame implements QuestionBase {
         `;
 
         // HTMLをセット
-        $("#question").html(Q + html);
+        $("#question").html(html);
 
         // 選択肢 要素数1以上の配列 初期値はりんごの数
         const opt: AtLeast<1, number> = [apple];

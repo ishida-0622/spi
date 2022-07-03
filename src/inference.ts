@@ -19,8 +19,8 @@ class Inference implements QuestionBase {
             arr[0] === "D" ? 1 : arr[1] === "D" ? 2 : arr[2] === "D" ? 3 : 4;
         const notA = arr.filter((s) => s !== "A");
 
-        const Q = `<h3>Q.${rep}</h3>`;
         const html = `
+        <h3>Q.${rep}</h3>
         <p>
         A,B,C,Dの4人が勝負をした結果について以下のことが分かっている。<br><br>
         同じ順位の人はいない。<br>
@@ -35,7 +35,7 @@ class Inference implements QuestionBase {
         選択肢がn,mの場合、B = n位,C = m位とする。
         </p>
         `;
-        $("#question").html(Q + html);
+        $("#question").html(html);
 
         const opt: number[][] = [];
         const notARank = [B, C, D].sort((a, b) => a - b);
