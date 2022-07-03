@@ -1,6 +1,6 @@
 import RequireOne from "./requireOne";
 
-type dict = RequireOne<{
+type valueToUse = RequireOne<{
     /**鶴亀算*/
     tsurukame?: {
         ans: number;
@@ -45,4 +45,4 @@ type dict = RequireOne<{
     };
 }>;
 
-export default dict;
+export default valueToUse;
